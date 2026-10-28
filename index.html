@@ -2380,33 +2380,105 @@ function fvsOfflineSync() {
   });
 }
 function fvsOfflineBaixarListas() {
-  if (!navigator.onLine) { mostrarMensagem('Conecte-se à internet para baixar os dados para uso offline.', 'aviso'); return; }
+  if (!navigator.onLine) {
+    mostrarMensagem('Conecte-se à internet para baixar os dados para uso offline.', 'aviso');
+    return;
+  }
   const btn = document.getElementById('fvsOfflineDownloadButton');
-  if (btn) { btn.disabled = true; btn.textContent = 'Baixando…'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Preparando download…'; }
+
+  // Primeiro baixa as listas de todos os pavimentos. Depois, usando os nomes
+  // retornados pelas listas, baixa também os detalhes que as telas abrem.
   const jobs = [];
+  const servicosPorTorre = {};
+  const testesPorTorre = {};
+  const nomesServicos = new Set();
+  const nomesTestes = new Set();
   ['Torre A','Torre B','Torre C','Torre D'].forEach(function(torre) {
-    for (let pavimento=1; pavimento<=24; pavimento++) {
-      jobs.push({metodo:'listarServicosPavimento', args:[torre,pavimento]});
-      jobs.push({metodo:'listarTestesPavimento', args:[torre,pavimento]});
+    servicosPorTorre[torre] = {};
+    testesPorTorre[torre] = {};
+    for (let pavimento = 1; pavimento <= 24; pavimento++) {
+      jobs.push({metodo:'listarServicosPavimento', args:[torre,pavimento], tipo:'listaServico', torre:torre, pavimento:pavimento});
+      jobs.push({metodo:'listarTestesPavimento', args:[torre,pavimento], tipo:'listaTeste', torre:torre, pavimento:pavimento});
     }
   });
-  let next=0, done=0, failed=0, running=0;
-  function finish(){
-    if(done+failed >= jobs.length){
-      if(btn){btn.disabled=false;btn.textContent='Baixar dados offline';}
-      fvsOfflineRenderBanner();
-      mostrarMensagem('Download offline concluído: '+done+' listas salvas'+(failed ? ', '+failed+' falharam. Confira a conexão e tente novamente.' : '.') , failed ? 'aviso' : 'sucesso', true);
+
+  let next = 0, done = 0, failed = 0, running = 0, total = jobs.length;
+  const erros = [];
+  function adicionarDetalhes() {
+    // Cada detalhe é uma consulta separada, com a mesma chave usada pelas telas.
+    Object.keys(servicosPorTorre).forEach(function(torre) {
+      Object.keys(servicosPorTorre[torre]).forEach(function(pavimento) {
+        (servicosPorTorre[torre][pavimento] || []).forEach(function(item) {
+          const nome = String(item && item.nome || '').trim();
+          if (!nome) return;
+          nomesServicos.add(nome);
+          jobs.push({metodo:'consultarServico', args:[torre,Number(pavimento),nome], tipo:'detalheServico'});
+          jobs.push({metodo:'listarObservacoes', args:[torre,Number(pavimento),nome], tipo:'observacoes'});
+        });
+      });
+      Object.keys(testesPorTorre[torre]).forEach(function(pavimento) {
+        (testesPorTorre[torre][pavimento] || []).forEach(function(item) {
+          const nome = String(item && item.nome || '').trim();
+          if (!nome) return;
+          nomesTestes.add(nome);
+          jobs.push({metodo:'consultarTeste', args:[torre,Number(pavimento),nome], tipo:'detalheTeste'});
+        });
+      });
+      // Cacheia também o acompanhamento geral de cada torre.
+      jobs.push({metodo:'acompanhamentoServicosPorTorre', args:[torre], tipo:'acompanhamentoTorre'});
+    });
+    nomesServicos.forEach(function(nome) {
+      jobs.push({metodo:'acompanhamentoServico', args:[nome], tipo:'acompanhamentoServico'});
+    });
+    nomesTestes.forEach(function(nome) {
+      jobs.push({metodo:'acompanhamentoTeste', args:[nome], tipo:'acompanhamentoTeste'});
+    });
+    total = jobs.length;
+  }
+  let detalhesAdicionados = false;
+  function atualizarBotao() {
+    if (btn) btn.textContent = 'Baixando ' + done + '/' + total + '…';
+  }
+  function finalizarSePronto() {
+    if (running !== 0 || next < jobs.length) return;
+    if (!detalhesAdicionados) {
+      detalhesAdicionados = true;
+      adicionarDetalhes();
+      atualizarBotao();
+      processar();
       return;
     }
-    while(running<4 && next<jobs.length){
-      const job=jobs[next++]; running++;
-      const handlers={success:function(){done++;running--;if(btn)btn.textContent='Baixando '+done+'/'+jobs.length;finish();},failure:function(){failed++;running--;finish();}};
-      fvsOfflineInvoke(job.metodo,job.args,handlers);
-    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Baixar dados offline'; }
+    fvsOfflineRenderBanner();
+    const msg = 'Download offline finalizado: ' + done + ' consultas salvas' + (failed ? '; ' + failed + ' falharam.' : '.') + (failed ? ' Conectado, tente baixar novamente.' : '');
+    mostrarMensagem(msg, failed ? 'aviso' : 'sucesso', true);
   }
-  finish();
+  function processar() {
+    while (running < 4 && next < jobs.length) {
+      const job = jobs[next++];
+      running++;
+      const handlers = {
+        success:function(data) {
+          if (job.tipo === 'listaServico' && Array.isArray(data)) {
+            servicosPorTorre[job.torre][job.pavimento] = data;
+          } else if (job.tipo === 'listaTeste' && Array.isArray(data)) {
+            testesPorTorre[job.torre][job.pavimento] = data;
+          }
+          done++; running--; atualizarBotao(); processar(); finalizarSePronto();
+        },
+        failure:function(error) {
+          failed++;
+          if (erros.length < 8) erros.push(job.metodo + ': ' + String(error && error.message || error || 'falha'));
+          done++; running--; atualizarBotao(); processar(); finalizarSePronto();
+        }
+      };
+      fvsOfflineInvoke(job.metodo, job.args, handlers);
+    }
+    finalizarSePronto();
+  }
+  processar();
 }
-
 function fvsOfflineInit() {
   const banner = document.getElementById('fvsOfflineBanner');
   if (!banner) return;
