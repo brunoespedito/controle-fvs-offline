@@ -1,4 +1,4 @@
-const CACHE_NAME = 'controle-fvs-shell-v1';
+const CACHE_NAME = 'controle-fvs-shell-v2';
 const SHELL = ['./', './index.html', './config.js', './manifest.json'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
