@@ -1,0 +1,7436 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>Controle FVS</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 18px 0;
+      text-align: center;
+      font-size: 26px;
+    }
+
+    .cabecalho-app {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .cabecalho-app h1 {
+      margin: 0;
+    }
+
+    .btn-atualizar {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      padding: 0;
+      border: 1px solid #d6dbe1;
+      border-radius: 8px;
+      background: #fff;
+      color: #4b5563;
+      font-size: 16px;
+      line-height: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .btn-atualizar:active {
+      transform: rotate(20deg);
+    }
+
+    .cabecalho-tela {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .cabecalho-tela h2 {
+      margin: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px 0;
+      font-size: 21px;
+    }
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    button,
+    select,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    .menu-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 16px;
+      margin: 7px 0;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .menu-consultar {
+      border-left: 5px solid #2563eb;
+    }
+
+    .menu-acompanhar {
+      border-left: 5px solid #16a34a;
+    }
+
+    .menu-registros {
+      border-left: 5px solid #9333ea;
+    }
+
+    .menu-subtitulo {
+      margin: 19px 0 7px 2px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .menu-btn-secundario {
+      width: 100%;
+      border: 1px solid #d6dbe1;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 5px 0;
+      font-size: 15px;
+      text-align: left;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .form-grupo {
+      margin-bottom: 14px;
+    }
+
+    .form-grupo label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      border: 1px solid #cfd5dc;
+      border-radius: 9px;
+      padding: 11px 12px;
+      background: white;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+
+    .btn-principal {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 15px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    .btn-principal:hover {
+      background: #1d4ed8;
+    }
+
+    /* Campos de seleção de fotos com área de toque maior para celular */
+    /* Campo de data do Diário um pouco maior para facilitar o toque no celular */
+    #dataDiario {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 12px;
+      border: 1px solid #cfd5dc;
+      border-radius: 9px;
+      background: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      min-height: 52px;
+      padding: 10px;
+      border: 1px solid #cfd5dc;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    input[type="file"]::file-selector-button {
+      min-height: 40px;
+      padding: 9px 14px;
+      margin-right: 10px;
+      border: 0;
+      border-radius: 8px;
+      background: #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .btn-voltar {
+      border: none;
+      background: transparent;
+      color: #2563eb;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 0;
+      margin-bottom: 12px;
+    }
+
+    .btn-acao {
+      border: none;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 4px 4px 4px 0;
+    }
+
+    .btn-iniciar {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .btn-concluir {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .btn-excluir {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-reabrir {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .btn-observacao {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-corrigir {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .btn-editar-observacao {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .editor-observacao {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      margin: 6px 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .status-nao {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .status-andamento {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-concluido {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .linha-geral {
+      padding: 8px 0;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .torre-geral {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .torre-titulo {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .ciclo-acompanhamento {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .nome-acompanhamento {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 9px;
+    }
+
+    .lista {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .item-lista {
+      background: white;
+      border-radius: 11px;
+      padding: 13px;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+      cursor: pointer;
+    }
+
+    .item-lista:hover {
+      transform: translateY(-1px);
+    }
+
+    .item-lista-nome {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .item-lista-info {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .item-lista-rodape {
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid #edf0f2;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .filtros {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .filtro-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    .detalhe-header {
+      margin-bottom: 14px;
+    }
+
+    .detalhe-nome {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .detalhe-local {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .detalhe-status {
+      margin: 12px 0;
+    }
+
+    .detalhe-datas {
+      background: #f9fafb;
+      border-radius: 9px;
+      padding: 11px;
+      margin: 10px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .observacoes {
+      margin-top: 16px;
+    }
+
+    .observacao-item {
+      padding: 11px;
+      margin: 7px 0;
+      border-radius: 9px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .observacao-item-corrigida {
+      opacity: 0.72;
+    }
+
+    .observacao-texto {
+      font-size: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .observacao-info {
+      margin-top: 6px;
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .observacao-acoes {
+      margin-top: 8px;
+    }
+
+    .pavimento-clicavel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin: 6px 0;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .pavimento-clicavel:hover {
+      transform: translateX(2px);
+    }
+
+    .pavimento-pendencia {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .pavimento-concluido {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .pavimento-andamento {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .pavimento-clicavel .seta {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .servico-acompanhamento-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 9px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
+    }
+
+    .servico-acompanhamento-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .servico-acompanhamento-ciclo {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .servico-acompanhamento-nome {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .servico-acompanhamento-rodape {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 11px;
+      padding-top: 10px;
+      border-top: 1px solid #edf0f2;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .servico-acompanhamento-seta {
+      font-size: 19px;
+    }
+
+    .subtitulo-acompanhamento {
+      margin-top: 7px;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .contador-acompanhamento {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .btn-voltar-servicos-acompanhamento {
+      border: none;
+      background: #f3f4f6;
+      color: #374151;
+      border-radius: 8px;
+      padding: 9px 11px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .resumo-acompanhamento {
+      margin-top: 15px;
+      overflow-x: auto;
+    }
+
+    .resumo-titulo {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .resumo-linha {
+      display: grid;
+      grid-template-columns: 1.15fr 0.9fr 1fr 0.8fr;
+      gap: 6px;
+      align-items: center;
+      padding: 9px 6px;
+      border-bottom: 1px solid #edf0f2;
+      min-width: 500px;
+      font-size: 13px;
+    }
+
+    .resumo-cabecalho {
+      font-weight: bold;
+      color: #4b5563;
+      background: #f9fafb;
+      border-radius: 7px;
+      border-bottom: none;
+    }
+
+    .resumo-pendencia {
+      color: #991b1b;
+      font-weight: bold;
+    }
+
+    .resumo-andamento {
+      color: #92400e;
+      font-weight: bold;
+    }
+
+    .resumo-concluido {
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .acompanhamento-torre-bloco {
+      margin-top: 10px;
+    }
+
+    .acompanhamento-torre-secao {
+      margin-top: 10px;
+    }
+
+    .acompanhamento-torre-secao-titulo {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .servico-torre-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 9px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .servico-torre-cabecalho {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .servico-torre-nome {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .servico-torre-ciclo {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .servico-torre-linha {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .contador-pendencias-torre {
+      min-width: 30px;
+      padding: 5px 7px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .servico-torre-link {
+      width: 100%;
+      margin-top: 12px;
+      border: none;
+      border-radius: 9px;
+      padding: 10px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .fvs-pendencia {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 9px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .fvs-pendencia-abertura {
+      border-left: 5px solid #f59e0b;
+    }
+
+    .fvs-pendencia-fechamento {
+      border-left: 5px solid #7c3aed;
+    }
+
+    .fvs-ciclo {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 9px;
+    }
+
+    .torre-badge { display:inline-block; padding:4px 8px; border-radius:7px; font-size:14px; font-weight:800; margin:2px 0 5px; }
+    .torre-a { color:#174ea6; background:#dbeafe; }
+    .torre-b { color:#991b1b; background:#fee2e2; }
+    .torre-c { color:#166534; background:#dcfce7; }
+    .torre-d { color:#854d0e; background:#fef3c7; }
+    .detalhe-local { font-size:16px; line-height:1.6; }
+    .pavimento-destaque { font-size:16px; padding:3px 7px; border-radius:6px; background:#f3f4f6; color:#111827; white-space:nowrap; }
+    .fvs-local { font-size:16px; line-height:1.55; }
+
+    .fvs-local {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .fvs-tipo {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .fvs-tipo-abertura {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .fvs-tipo-fechamento {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .btn-fvs-ok {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      padding: 12px;
+      background: #f3f4f6;
+      color: #111827;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .historico-item {
+      background: white;
+      border-radius: 11px;
+      padding: 14px;
+      margin: 8px 0;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+      cursor: pointer;
+    }
+
+    .historico-item-sem-clique {
+      cursor: default;
+    }
+
+    .historico-item-nome {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .historico-local {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 9px;
+    }
+
+    .historico-acao {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .historico-iniciado {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .historico-concluido {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .historico-excluido {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .historico-fvs {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .historico-info {
+      margin-top: 9px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    #mensagemApp {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      top: 50%;
+      bottom: auto;
+      transform: translate(-50%, -50%);
+      z-index: 10001;
+      display: none;
+      width: calc(100% - 32px);
+      max-width: 560px;
+      margin: 0;
+      padding: 16px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: bold;
+      text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+    }
+
+    #mensagemApp.sucesso {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    #mensagemApp.erro {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    #mensagemApp.aviso {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #f59e0b;
+    }
+
+    #mensagemApp .mensagem-ok {
+      display: block;
+      min-width: 100px;
+      margin: 14px auto 0;
+      padding: 9px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: #374151;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .indicador-observacao {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .indicador-observacao .bolinha {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+    }
+
+    .indicador-observacao.com-observacao {
+      color: #c62828;
+    }
+
+    .indicador-observacao.com-observacao .bolinha {
+      background: #d32f2f;
+    }
+
+    .indicador-observacao.sem-observacao {
+      color: #2e7d32;
+    }
+
+    .indicador-observacao.sem-observacao .bolinha {
+      background: #2e7d32;
+    }
+
+    .indicador-observacao.observacao-resolvida {
+      color: #1565c0;
+    }
+
+    .indicador-observacao.observacao-resolvida .bolinha {
+      background: #1976d2;
+    }
+
+    .carregando {
+      padding: 18px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .sem-resultados {
+      background: white;
+      padding: 16px;
+      border-radius: 11px;
+      color: #6b7280;
+      text-align: center;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.06);
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 11px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .resumo-linha {
+        min-width: 460px;
+      }
+
+      .detalhe-nome {
+        font-size: 18px;
+      }
+
+    }
+
+
+    .galeria-fotos { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-top:12px; }
+    .foto-item { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:8px; overflow:hidden; }
+    .foto-item img { width:100%; height:120px; object-fit:cover; border-radius:7px; background:#f3f4f6; }
+    .foto-item a { display:block; margin-top:6px; font-size:12px; overflow-wrap:anywhere; }
+    .foto-meta { color:#6b7280; font-size:12px; margin-top:4px; }
+    .foto-form { display:grid; gap:10px; }
+
+  
+    .campo-teste-complementar { margin-top: 14px; }
+    .campo-teste-complementar label { display:block; font-weight:600; margin-bottom:6px; }
+    .campo-teste-complementar textarea, .campo-teste-complementar input { width:100%; padding:11px; border:1px solid #cfd5dc; border-radius:9px; font:inherit; box-sizing:border-box; }
+    .registro-observacao-teste { background:#fff8e8; border:1px solid #f0d28a; border-radius:9px; padding:12px; margin:10px 0; }
+    .registro-observacao-teste.corrigida { background:#eef9f0; border-color:#a8d9b0; }
+
+    .modal-data-fvs {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(17, 24, 39, 0.55);
+    }
+    .modal-data-fvs-painel {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+    }
+    .modal-data-fvs-painel h3 { margin: 0 0 9px; font-size: 19px; }
+    .modal-data-fvs-descricao { color: #4b5563; font-size: 14px; line-height: 1.5; margin: 0 0 16px; }
+    .modal-data-fvs-painel label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 7px; }
+    .modal-data-fvs-painel input[type="date"] {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 1px solid #cfd5dc;
+      border-radius: 9px;
+      background: #fff;
+      font: inherit;
+      font-size: 16px;
+    }
+    .modal-data-fvs-acoes { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-data-fvs-acoes button { flex: 1; min-height: 44px; border: 0; border-radius: 9px; padding: 10px 12px; font-size: 14px; font-weight: bold; }
+    .btn-modal-data-cancelar { background: #e5e7eb; color: #374151; }
+    .btn-modal-data-confirmar { background: #166534; color: #fff; }
+
+  
+
+    /* Indicador e fila local do modo offline */
+    .fvs-offline-banner { position: sticky; top: 0; z-index: 10000; max-width: 932px; margin: 0 auto 12px; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 10px; background: #ffffff; box-shadow: 0 2px 7px rgba(0,0,0,.06); font-size: 13px; }
+    .fvs-offline-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .fvs-offline-status { display: flex; flex-direction: column; gap: 3px; min-width: 160px; }
+    #fvsOfflineEstado { color: #1f2937; }
+    #fvsOfflineContagem { color: #4b5563; }
+    .fvs-offline-actions { display: flex; gap: 7px; }
+    .fvs-offline-actions button, .fvs-offline-remove { border: 1px solid #d1d5db; border-radius: 7px; padding: 7px 10px; background: #f3f4f6; color: #111827; font-weight: 600; font-size: 12px; }
+    .fvs-offline-actions button:disabled { opacity: .45; }
+    .fvs-offline-queue { margin-top: 9px; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+    .fvs-offline-item { padding: 9px 0; border-bottom: 1px solid #e5e7eb; }
+    .fvs-offline-item:last-child { border-bottom: 0; }
+    .fvs-offline-item-title { font-weight: 700; color: #111827; }
+    .fvs-offline-item-detail { margin: 4px 0; color: #4b5563; overflow-wrap: anywhere; }
+    .fvs-offline-remove { margin-top: 4px; background: #fff7ed; border-color: #fdba74; }
+    @media (max-width: 480px) { .fvs-offline-banner { padding: 9px; } .fvs-offline-actions button { padding: 7px 8px; } }
+</style>
+
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1f4e79">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="./config.js"></script>
+<script>
+(function(){
+  let seq = 0;
+  const handlers = {success:null, failure:null};
+  const apiUrl = String(window.FVS_API_URL || '').trim();
+  function call(method, args, success, failure) {
+    if (!apiUrl || apiUrl.indexOf('COLE_A_URL') >= 0) {
+      if (failure) failure(new Error('Configure a URL do Web App no arquivo config.js.'));
+      return;
+    }
+    const callback = '__fvsJsonp_' + Date.now() + '_' + (++seq);
+    const params = new URLSearchParams({fvs_api:'1', method:method, args:JSON.stringify(args || []), callback:callback});
+    const script = document.createElement('script');
+    let finished = false;
+    const cleanup = function(){ try { delete window[callback]; } catch(_) { window[callback] = undefined; } if (script.parentNode) script.parentNode.removeChild(script); clearTimeout(timer); };
+    const timer = setTimeout(function(){ if(finished)return; finished=true; cleanup(); if(failure)failure(new Error('Tempo esgotado ao acessar o Apps Script.')); }, 30000);
+    window[callback] = function(result){ if(finished)return; finished=true; cleanup(); if(result && result.ok) { if(success)success(result.data); } else if(failure) failure(new Error(result && result.error || 'Falha na API do Controle FVS.')); };
+    script.onerror = function(){ if(finished)return; finished=true; cleanup(); if(failure)failure(new Error('Não foi possível acessar a API. Confira a conexão e a implantação do Apps Script.')); };
+    script.src = apiUrl + (apiUrl.indexOf('?') >= 0 ? '&' : '?') + params.toString();
+    document.head.appendChild(script);
+  }
+  const run = new Proxy({}, {get:function(_t, prop){
+    if(prop === 'withSuccessHandler') return function(fn){ handlers.success=fn; return run; };
+    if(prop === 'withFailureHandler') return function(fn){ handlers.failure=fn; return run; };
+    if(prop === 'then') return undefined;
+    return function(){ call(String(prop), Array.prototype.slice.call(arguments), handlers.success, handlers.failure); return run; };
+  }});
+  if (!window.google) window.google = {};
+  if (!window.google.script) window.google.script = {};
+  window.google.script.run = run;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js').catch(function(e){ console.warn('PWA cache registration failed', e); }); });
+  }
+})();
+</script>
+
+</head>
+
+<body>
+
+<div id="fvsOfflineBanner" class="fvs-offline-banner" role="status" aria-live="polite">
+  <div class="fvs-offline-bar">
+    <div class="fvs-offline-status">
+      <strong id="fvsOfflineEstado">Preparando armazenamento local…</strong>
+      <span id="fvsOfflineContagem">Conferindo fila…</span>
+    </div>
+    <div class="fvs-offline-actions">
+      <button id="fvsOfflineSyncButton" type="button" onclick="fvsOfflineSync()" disabled>Sincronizar</button>
+      <button id="fvsOfflineDownloadButton" type="button" onclick="fvsOfflineBaixarListas()">Baixar dados offline</button>
+      <button id="fvsOfflineQueueButton" type="button" onclick="fvsOfflineToggleQueue()">Ver fila</button>
+    </div>
+  </div>
+  <div id="fvsOfflineFilaPainel" class="fvs-offline-queue" hidden></div>
+</div>
+
+<div id="app">
+
+  <div class="cabecalho-app">
+
+    <h1>📋 Controle FVS</h1>
+
+    <button
+      type="button"
+      class="btn-atualizar"
+      title="Atualizar"
+      aria-label="Atualizar"
+      onclick="atualizarPagina()">
+
+      ↻
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       MENU PRINCIPAL
+       ===================================================== -->
+
+  <div id="menuPrincipal">
+
+    <div class="menu-subtitulo">
+      🔎 CONSULTAR
+    </div>
+
+    <button
+      class="menu-btn menu-consultar"
+      onclick="abrirServicos()">
+
+      🔧 Serviços por Pavimento
+
+    </button>
+
+    <button
+      class="menu-btn menu-consultar"
+      onclick="abrirTestes()">
+
+      🧪 Testes por Pavimento
+
+    </button>
+
+
+    <div class="menu-subtitulo">
+      📊 ACOMPANHAR
+    </div>
+
+    <button
+      class="menu-btn menu-acompanhar"
+      onclick="abrirAcompanhamento()">
+
+      🧪 Acompanhamento de Testes
+
+    </button>
+
+    <button
+      class="menu-btn menu-acompanhar"
+      onclick="abrirAcompanhamentoServicos()">
+
+      📈 Acompanhamento de Serviços
+
+    </button>
+
+    <button
+      class="menu-btn menu-acompanhar"
+      onclick="abrirAcompanhamentoTorre()">
+
+      🏢 Acompanhamento por Torre
+
+    </button>
+
+
+    <div class="menu-subtitulo">
+      📷 DIÁRIO DE OBRAS
+    </div>
+
+    <button class="menu-btn menu-registros" onclick="abrirDiarioObras()">
+      📷 Diário de Obras — Fotos gerais
+    </button>
+
+    <div class="menu-subtitulo">
+      📝 REGISTROS
+    </div>
+
+    <button
+      class="menu-btn menu-registros"
+      onclick="abrirFvsCiclo()">
+
+      📝 Abertura/Fechamento de FVS por Ciclo
+
+    </button>
+
+    <button
+      class="menu-btn menu-registros"
+      onclick="abrirHistorico()">
+
+      📜 Histórico
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       SERVIÇOS POR PAVIMENTO
+       ===================================================== -->
+
+  <section
+    id="telaServicos"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <div class="cabecalho-tela">
+
+      <h2>🔧 Serviços por Pavimento</h2>
+
+      <button
+        type="button"
+        class="btn-atualizar"
+        title="Atualizar serviços"
+        aria-label="Atualizar serviços"
+        onclick="atualizarServicos()">
+
+        ↻
+
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="form-grupo">
+
+        <label for="torreServicos">
+          Torre
+        </label>
+
+        <select id="torreServicos">
+
+          <option value="">
+            Selecione a torre
+          </option>
+
+          <option value="Torre A">
+            Torre A
+          </option>
+
+          <option value="Torre B">
+            Torre B
+          </option>
+
+          <option value="Torre C">
+            Torre C
+          </option>
+
+          <option value="Torre D">
+            Torre D
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-grupo">
+
+        <label for="pavimentoServicos">
+          Pavimento
+        </label>
+
+        <select id="pavimentoServicos">
+
+          <option value="">
+            Selecione o pavimento
+          </option>
+
+          <script>
+
+            for (
+              let i = 1;
+              i <= 24;
+              i++
+            ) {
+
+              document.write(
+                `<option value="${i}">
+                  ${i}º pavimento
+                </option>`
+              );
+
+            }
+
+          </script>
+
+        </select>
+
+      </div>
+
+      <div
+        id="filtroCicloServicosContainer"
+        class="form-grupo oculto">
+
+        <label for="filtroCicloServicos">
+          Ciclo
+        </label>
+
+        <select id="filtroCicloServicos"
+                onchange="filtrarServicos()">
+
+          <option value="">
+            Todos os ciclos
+          </option>
+
+        </select>
+
+      </div>
+
+      <div
+        id="buscaServicoServicosContainer"
+        class="form-grupo oculto">
+
+        <label for="buscaServicoServicos">
+          Pesquisar serviço
+        </label>
+
+        <input
+          id="buscaServicoServicos"
+          type="text"
+          placeholder="Digite parte do nome do serviço..."
+          oninput="filtrarServicos()">
+
+      </div>
+
+      <button
+        class="btn-principal"
+        onclick="carregarServicos()">
+
+        🔎 Consultar serviços
+
+      </button>
+
+    </div>
+
+    <div id="listaServicos"></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       TESTES POR PAVIMENTO
+       ===================================================== -->
+
+  <section
+    id="telaTestes"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>🧪 Testes por Pavimento</h2>
+
+    <div class="card">
+
+      <div class="form-grupo">
+
+        <label for="torreTestes">
+          Torre
+        </label>
+
+        <select id="torreTestes">
+
+          <option value="">
+            Selecione a torre
+          </option>
+
+          <option value="Torre A">
+            Torre A
+          </option>
+
+          <option value="Torre B">
+            Torre B
+          </option>
+
+          <option value="Torre C">
+            Torre C
+          </option>
+
+          <option value="Torre D">
+            Torre D
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-grupo">
+
+        <label for="pavimentoTestes">
+          Pavimento
+        </label>
+
+        <select id="pavimentoTestes">
+
+          <option value="">
+            Selecione o pavimento
+          </option>
+
+          <script>
+
+            for (
+              let i = 1;
+              i <= 24;
+              i++
+            ) {
+
+              document.write(
+                `<option value="${i}">
+                  ${i}º pavimento
+                </option>`
+              );
+
+            }
+
+          </script>
+
+        </select>
+
+      </div>
+
+      <button
+        class="btn-principal"
+        onclick="carregarTestes()">
+
+        🔎 Consultar testes
+
+      </button>
+
+    </div>
+
+    <div id="listaTestes"></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       DETALHES
+       ===================================================== -->
+
+  <section
+    id="telaDetalhes"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarLista()">
+
+      ← Voltar
+
+    </button>
+
+    <div id="detalhesConteudo"></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ACOMPANHAMENTO DE TESTES
+       ===================================================== -->
+
+  <section
+    id="telaAcompanhamento"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>🧪 Acompanhamento de Testes</h2>
+
+    <div class="card">
+
+      <div class="form-grupo">
+
+        <label for="testeAcompanhamento">
+          Teste
+        </label>
+
+        <select
+          id="testeAcompanhamento"
+          onchange="carregarAcompanhamento()">
+
+          <option value="">
+            Selecione o teste
+          </option>
+
+          <option value="Teste de Estanqueidade">
+            Teste de Estanqueidade
+          </option>
+
+          <option value="Teste de Esgoto">
+            Teste de Esgoto
+          </option>
+
+          <option value="Teste de Impermeabilização">
+            Teste de Impermeabilização
+          </option>
+
+          <option value="Teste de Elétrica">
+            Teste de Elétrica
+          </option>
+
+          <option value="Teste de Gás">
+            Teste de Gás
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <div id="resultadoAcompanhamento"></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ACOMPANHAMENTO DE SERVIÇOS
+       ===================================================== -->
+
+  <section
+    id="telaAcompanhamentoServicos"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>📈 Acompanhamento de Serviços</h2>
+
+    <div class="card">
+
+      <div class="form-grupo">
+
+        <label for="buscaServicoAcompanhamento">
+          Buscar serviço
+        </label>
+
+        <input
+          id="buscaServicoAcompanhamento"
+          type="text"
+          placeholder="Digite o nome do serviço..."
+          oninput="filtrarServicosAcompanhamento()">
+
+      </div>
+
+      <div
+        id="contadorServicosAcompanhamento"
+        class="contador-acompanhamento">
+      </div>
+
+    </div>
+
+    <div
+      id="listaServicosAcompanhamento">
+    </div>
+
+    <div
+      id="resultadoAcompanhamentoServicos">
+    </div>
+
+    <select
+      id="servicoAcompanhamento"
+      class="oculto">
+
+    </select>
+
+  </section>
+
+
+  <!-- =====================================================
+       ACOMPANHAMENTO POR TORRE
+       ===================================================== -->
+
+  <section
+    id="telaAcompanhamentoTorre"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>🏢 Acompanhamento por Torre</h2>
+
+    <div class="card">
+
+      <div class="form-grupo">
+
+        <label for="torreAcompanhamento">
+          Torre
+        </label>
+
+        <select
+          id="torreAcompanhamento"
+          onchange="carregarAcompanhamentoTorre()">
+
+          <option value="">
+            Selecione a torre
+          </option>
+
+          <option value="Torre A">
+            Torre A
+          </option>
+
+          <option value="Torre B">
+            Torre B
+          </option>
+
+          <option value="Torre C">
+            Torre C
+          </option>
+
+          <option value="Torre D">
+            Torre D
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <div
+      id="resultadoAcompanhamentoTorre">
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FVS POR CICLO
+       ===================================================== -->
+
+  <section
+    id="telaFvsCiclo"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>
+      📝 Abertura/Fechamento de FVS por Ciclo
+    </h2>
+
+    <div class="card">
+
+      <div
+        id="contadorFvsCiclo"
+        class="contador-acompanhamento">
+      </div>
+
+      <button
+        class="btn-principal"
+        onclick="confirmarTodosFvsCicloTela()">
+
+        ✅ Confirmar Todos
+
+      </button>
+
+      <button
+        class="btn-principal"
+        onclick="carregarFvsCiclo()">
+
+        🔄 Atualizar pendências
+
+      </button>
+
+    </div>
+
+    <div id="listaFvsCiclo"></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       DIÁRIO DE OBRAS
+       ===================================================== -->
+  <section id="telaDiarioObras" class="oculto">
+    <button class="btn-voltar" onclick="voltarMenu()">← Voltar ao menu</button>
+    <h2>📷 Diário de Obras</h2>
+    <div class="card">
+      <p>Registre fotos gerais da obra, com local e descrição. As imagens serão guardadas na pasta compartilhada FVS_FOTOS.</p>
+      <div class="foto-form">
+        <div class="form-grupo"><label for="diarioTorre">Torre</label><select id="diarioTorre"><option value="">Selecione a torre</option><option>Torre A</option><option>Torre B</option><option>Torre C</option><option>Torre D</option></select></div>
+        <div class="form-grupo"><label for="diarioPavimento">Pavimento (opcional)</label><select id="diarioPavimento"><option value="">Área geral / não se aplica</option><option value="1">1º pavimento</option><option value="2">2º pavimento</option><option value="3">3º pavimento</option><option value="4">4º pavimento</option><option value="5">5º pavimento</option><option value="6">6º pavimento</option><option value="7">7º pavimento</option><option value="8">8º pavimento</option><option value="9">9º pavimento</option><option value="10">10º pavimento</option><option value="11">11º pavimento</option><option value="12">12º pavimento</option><option value="13">13º pavimento</option><option value="14">14º pavimento</option><option value="15">15º pavimento</option><option value="16">16º pavimento</option><option value="17">17º pavimento</option><option value="18">18º pavimento</option><option value="19">19º pavimento</option><option value="20">20º pavimento</option><option value="21">21º pavimento</option><option value="22">22º pavimento</option><option value="23">23º pavimento</option><option value="24">24º pavimento</option></select></div>
+        <div class="form-grupo"><label for="diarioDescricao">Observação (opcional)</label><textarea id="diarioDescricao" placeholder="Ex.: concretagem, entrega de material, condição geral da obra..."></textarea></div>
+        <div class="form-grupo"><label for="diarioFotos">Fotos</label><input id="diarioFotos" type="file" accept="image/*" capture="environment" multiple></div>
+        <button class="btn-principal" onclick="enviarFotosDiario()">📤 Salvar fotos no Diário de Obras</button>
+      </div>
+    </div>
+    <div class="card"><h3>📚 Registros do diário</h3><div class="form-grupo"><label for="dataDiario">Mostrar fotos da data</label><input id="dataDiario" type="date" onchange="carregarFotosDiario()"></div><div id="listaFotosDiario" class="carregando">Carregando registros...</div></div>
+  </section>
+
+  <!-- =====================================================
+       HISTÓRICO
+       ===================================================== -->
+
+  <section
+    id="telaHistorico"
+    class="oculto">
+
+    <button
+      class="btn-voltar"
+      onclick="voltarMenu()">
+
+      ← Voltar ao menu
+
+    </button>
+
+    <h2>📜 Histórico</h2>
+
+    <div class="card">
+
+      <div class="filtros">
+
+        <div>
+
+          <div class="filtro-label">
+            Buscar
+          </div>
+
+          <input
+            id="buscaHistorico"
+            type="text"
+            placeholder="Serviço, teste ou ação..."
+            oninput="carregarHistorico()">
+
+        </div>
+
+        <div>
+
+          <div class="filtro-label">
+            Torre
+          </div>
+
+          <select
+            id="filtroTorreHistorico"
+            onchange="carregarHistorico()">
+
+            <option value="">
+              Todas
+            </option>
+
+            <option value="Torre A">
+              Torre A
+            </option>
+
+            <option value="Torre B">
+              Torre B
+            </option>
+
+            <option value="Torre C">
+              Torre C
+            </option>
+
+            <option value="Torre D">
+              Torre D
+            </option>
+
+          </select>
+
+        </div>
+
+        <div>
+
+          <div class="filtro-label">
+            Pavimento
+          </div>
+
+          <select
+            id="filtroPavimentoHistorico"
+            onchange="carregarHistorico()">
+
+            <option value="">
+              Todos
+            </option>
+
+            <script>
+
+              for (
+                let i = 1;
+                i <= 24;
+                i++
+              ) {
+
+                document.write(
+                  `<option value="${i}">
+                    ${i}º pavimento
+                  </option>`
+                );
+
+              }
+
+            </script>
+
+          </select>
+
+        </div>
+
+        <div>
+
+          <div class="filtro-label">
+            Ação
+          </div>
+
+          <select
+            id="filtroAcaoHistorico"
+            onchange="carregarHistorico()">
+
+            <option value="">
+              Todas
+            </option>
+
+            <option value="Iniciado">
+              Iniciado
+            </option>
+
+            <option value="Concluído">
+              Concluído
+            </option>
+
+            <option value="Observação aberta">
+              Observação aberta
+            </option>
+
+            <option value="Serviço excluído">
+              Serviço excluído
+            </option>
+
+            <option value="Observação excluída">
+              Observação excluída
+            </option>
+
+            <option value="FVS aberta">
+              FVS aberta
+            </option>
+
+            <option value="FVS fechada">
+              FVS fechada
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <div
+        id="contadorHistorico"
+        class="contador-acompanhamento">
+      </div>
+
+    </div>
+
+    <div id="listaHistorico"></div>
+
+    <div id="maisHistorico" class="historico-mais"></div>
+
+  </section>
+
+
+</div>
+
+
+<div id="modalDataFvs" class="modal-data-fvs oculto" role="dialog" aria-modal="true" aria-labelledby="modalDataFvsTitulo">
+  <div class="modal-data-fvs-painel">
+    <h3 id="modalDataFvsTitulo">Registrar data</h3>
+    <p id="modalDataFvsDescricao" class="modal-data-fvs-descricao"></p>
+    <div class="form-grupo">
+      <label id="modalDataFvsLabel" for="dataEfetivaFvs">Data</label>
+      <input id="dataEfetivaFvs" type="date" required>
+    </div>
+    <div class="modal-data-fvs-acoes">
+      <button type="button" class="btn-modal-data-cancelar" onclick="fecharModalDataFvs()">Cancelar</button>
+      <button type="button" class="btn-modal-data-confirmar" onclick="confirmarDataEfetivaFvs()">Salvar data</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="mensagemApp"></div>
+
+
+<script>
+
+/* =====================================================
+   CAMADA OFFLINE CONTROLADA — CONTROLE FVS
+   Cache local de consultas e fila persistente de ações.
+   Não permite gravações offline fora da lista segura.
+   ===================================================== */
+const FVS_SERVER_RUN = google.script.run;
+const FVS_OFFLINE_DB_NAME = 'ControleFVS_Offline_v1';
+const FVS_OFFLINE_DB_VERSION = 1;
+const FVS_OFFLINE_MUTATIONS = new Set([
+  'registrarData', 'registrarTeste', 'reabrirServico', 'excluirServico',
+  'marcarObservacaoTesteCorrigida', 'registrarObservacao', 'editarObservacao',
+  'excluirObservacao', 'marcarObservacaoCorrigida', 'confirmarFvsCiclo',
+  'confirmarTodasFvsCiclo', 'salvarFotosFvs'
+]);
+const FVS_OFFLINE_QUEUEABLE = new Set([
+  'registrarData', 'registrarTeste', 'registrarObservacao',
+  'marcarObservacaoTesteCorrigida'
+]);
+const FVS_OFFLINE_NO_CACHE = new Set([
+  'listarHistorico', 'listarPendenciasFvsCiclo', 'listarFotosFvs', 'salvarFotosFvs'
+]);
+let FVS_OFFLINE_DB_PROMISE = null;
+let FVS_OFFLINE_SYNCING = false;
+let FVS_OFFLINE_QUEUE_OPEN = false;
+let FVS_OFFLINE_SERVER_UNREACHABLE = false;
+
+function fvsOfflineDb() {
+  if (FVS_OFFLINE_DB_PROMISE) return FVS_OFFLINE_DB_PROMISE;
+  FVS_OFFLINE_DB_PROMISE = new Promise(function(resolve, reject) {
+    if (!('indexedDB' in window)) {
+      reject(new Error('Este navegador não disponibiliza armazenamento local IndexedDB.'));
+      return;
+    }
+    const request = indexedDB.open(FVS_OFFLINE_DB_NAME, FVS_OFFLINE_DB_VERSION);
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('cache')) db.createObjectStore('cache', { keyPath: 'key' });
+      if (!db.objectStoreNames.contains('fila')) db.createObjectStore('fila', { keyPath: 'id' });
+    };
+    request.onsuccess = function() { resolve(request.result); };
+    request.onerror = function() { reject(request.error || new Error('Falha ao abrir armazenamento local.')); };
+  });
+  return FVS_OFFLINE_DB_PROMISE;
+}
+
+function fvsOfflineDbRequest(storeName, mode, operation) {
+  return fvsOfflineDb().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      const tx = db.transaction(storeName, mode);
+      const store = tx.objectStore(storeName);
+      let request;
+      let result;
+      try { request = operation(store); } catch (error) { reject(error); return; }
+      request.onsuccess = function() { result = request.result; };
+      request.onerror = function() { reject(request.error || new Error('Erro no armazenamento local.')); };
+      tx.oncomplete = function() { resolve(result); };
+      tx.onerror = function() { reject(tx.error || new Error('Erro ao confirmar gravação local.')); };
+      tx.onabort = function() { reject(tx.error || new Error('Gravação local cancelada.')); };
+    });
+  });
+}
+function fvsOfflineGet(store, key) {
+  return fvsOfflineDbRequest(store, 'readonly', function(s) { return s.get(key); });
+}
+function fvsOfflinePut(store, value) {
+  return fvsOfflineDbRequest(store, 'readwrite', function(s) { return s.put(value); });
+}
+function fvsOfflineDelete(store, key) {
+  return fvsOfflineDbRequest(store, 'readwrite', function(s) { return s.delete(key); });
+}
+function fvsOfflineGetAll(store) {
+  return fvsOfflineDbRequest(store, 'readonly', function(s) { return s.getAll(); });
+}
+function fvsOfflineInvalidateItemCache(item) {
+  const method = String(item && item.method || '');
+  const a = item && Array.isArray(item.args) ? item.args : [];
+  const tower = String(a[0] || '');
+  const floor = Number(a[1] || 0);
+  const name = String(a[2] || '');
+  return fvsOfflineGetAll('cache').then(function(records) {
+    const removals = [];
+    (records || []).forEach(function(record) {
+      let methodCache = ''; let argsCache = [];
+      try { const split = record.key.indexOf('::'); methodCache = record.key.slice(0, split); argsCache = JSON.parse(record.key.slice(split + 2)); } catch (_) { return; }
+      let remove = false;
+      if (method === 'registrarData') {
+        remove = (methodCache === 'consultarServico' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor && String(argsCache[2]) === name) ||
+          (methodCache === 'listarServicosPavimento' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor) ||
+          (methodCache === 'acompanhamentoServico' && String(argsCache[0]) === name) ||
+          (methodCache === 'acompanhamentoServicosPorTorre' && String(argsCache[0]) === tower);
+      } else if (method === 'registrarTeste' || method === 'marcarObservacaoTesteCorrigida') {
+        remove = (methodCache === 'consultarTeste' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor && String(argsCache[2]) === name) ||
+          (methodCache === 'listarTestesPavimento' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor) ||
+          (methodCache === 'acompanhamentoTeste' && String(argsCache[0]) === name);
+      } else if (method === 'registrarObservacao') {
+        remove = (methodCache === 'listarObservacoes' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor && String(argsCache[2]) === name) ||
+          (methodCache === 'listarServicosPavimento' && String(argsCache[0]) === tower && Number(argsCache[1]) === floor) ||
+          (methodCache === 'acompanhamentoServico' && String(argsCache[0]) === name);
+      }
+      if (remove) removals.push(fvsOfflineDelete('cache', record.key));
+    });
+    return Promise.all(removals);
+  });
+}
+function fvsOfflineCacheKey(method, args) {
+  const normalizados = (args || []).map(function(valor, indice) {
+    if (indice === 1 && valor !== null && valor !== undefined && ['listarServicosPavimento','listarTestesPavimento','consultarServico','consultarTeste','listarObservacoes'].includes(String(method))) return String(valor);
+    return valor;
+  });
+  return String(method) + '::' + JSON.stringify(normalizados);
+}
+function fvsOfflineCanCache(method) {
+  return !FVS_OFFLINE_MUTATIONS.has(method) && !FVS_OFFLINE_NO_CACHE.has(method);
+}
+function fvsOfflineFormatDate(iso) {
+  const s = String(iso || '');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(0, 4);
+  return s;
+}
+function fvsOfflineTodayDisplay() {
+  const d = new Date();
+  return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+}
+function fvsOfflineStatus(inicio, termino) {
+  if (inicio && termino) return 'Concluído';
+  if (inicio && !termino) return 'Em andamento';
+  return 'Não iniciado';
+}
+function fvsOfflineAtualizarRegistro(registro, acao, data, isTeste) {
+  if (!registro || typeof registro !== 'object') return;
+  if (acao === 'inicio') {
+    if (!registro.inicio) registro.inicio = data;
+  } else if (acao === 'termino') {
+    if (isTeste && !registro.inicio) registro.inicio = data;
+    if (!registro.termino) registro.termino = data;
+  }
+  registro.status = fvsOfflineStatus(registro.inicio, registro.termino);
+}
+function fvsOfflinePatchTestDetail(registro, acao, data) {
+  if (!registro || typeof registro !== 'object') return;
+  (registro.componentes || []).forEach(function(c) { fvsOfflineAtualizarRegistro(c, acao, data, true); });
+  const componentes = registro.componentes || [];
+  registro.status = componentes.length && componentes.every(function(c) { return c.status === 'Concluído'; })
+    ? 'Concluído'
+    : (componentes.some(function(c) { return c.status !== 'Não iniciado'; }) ? 'Em andamento' : 'Não iniciado');
+  const inicios = componentes.map(function(c) { return c.inicio; }).filter(Boolean);
+  const termos = componentes.map(function(c) { return c.termino; }).filter(Boolean);
+  registro.inicio = inicios[0] || '';
+  registro.termino = termos.length ? termos[termos.length - 1] : '';
+}
+function fvsOfflinePatchCache(method, args) {
+  return fvsOfflineGetAll('cache').then(function(records) {
+    const nome = String(args[2] || '');
+    const torre = String(args[0] || '');
+    const pavimento = Number(args[1] || 0);
+    const acao = String(args[3] || '');
+    const data = fvsOfflineFormatDate(method === 'registrarData' ? args[4] : (method === 'registrarTeste' ? args[6] : ''));
+    const observacaoTeste = String(args[4] || '').trim();
+    const pressaoTeste = String(args[5] || '').trim();
+    const updates = [];
+    (records || []).forEach(function(record) {
+      let methodCache = '';
+      let cacheArgs = [];
+      try {
+        const split = record.key.indexOf('::');
+        methodCache = record.key.slice(0, split);
+        cacheArgs = JSON.parse(record.key.slice(split + 2));
+      } catch (_) { return; }
+      let value = record.value;
+      let changed = false;
+      if (method === 'registrarData') {
+        if (methodCache === 'consultarServico' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && String(cacheArgs[2]) === nome && value) {
+          fvsOfflineAtualizarRegistro(value, acao, data, false);
+          if (acao === 'inicio' && !value.dataAbertura) value.dataAbertura = fvsOfflineTodayDisplay();
+          changed = true;
+        } else if (methodCache === 'listarServicosPavimento' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && Array.isArray(value)) {
+          value.forEach(function(item) { if (String(item.nome) === nome) { fvsOfflineAtualizarRegistro(item, acao, data, false); changed = true; } });
+        } else if (methodCache === 'acompanhamentoServico' && String(cacheArgs[0]) === nome && Array.isArray(value)) {
+          value.forEach(function(t) { if (String(t.torre) === torre) (t.pavimentos || []).forEach(function(p) { if (Number(p.pavimento) === pavimento) { fvsOfflineAtualizarRegistro(p, acao, data, false); changed = true; } }); });
+        } else if (methodCache === 'acompanhamentoServicosPorTorre' && String(cacheArgs[0]) === torre && Array.isArray(value)) {
+          value.forEach(function(s) { if (String(s.nome) === nome) (s.dados && s.dados.pavimentos || []).forEach(function(p) { if (Number(p.pavimento) === pavimento) { fvsOfflineAtualizarRegistro(p, acao, data, false); changed = true; } }); });
+        }
+      } else if (method === 'registrarTeste') {
+        if (methodCache === 'consultarTeste' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && String(cacheArgs[2]) === nome && value) {
+          fvsOfflinePatchTestDetail(value, acao, data);
+          if (acao === 'inicio' && observacaoTeste) { value.observacao = observacaoTeste; value.statusObservacao = 'Pendente'; }
+          if (acao === 'inicio' && pressaoTeste) value.pressao = pressaoTeste;
+          changed = true;
+        } else if (methodCache === 'listarTestesPavimento' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && Array.isArray(value)) {
+          value.forEach(function(item) {
+            if (String(item.nome) === nome) {
+              fvsOfflineAtualizarRegistro(item, acao, data, true);
+              if (acao === 'inicio' && observacaoTeste) { item.temObservacao = true; item.temObservacaoRegistrada = true; }
+              changed = true;
+            }
+          });
+        } else if (methodCache === 'acompanhamentoTeste' && String(cacheArgs[0]) === nome && Array.isArray(value)) {
+          value.forEach(function(t) {
+            if (String(t.torre) === torre) (t.pavimentos || []).forEach(function(p) {
+              if (Number(p.pavimento) === pavimento) { fvsOfflineAtualizarRegistro(p, acao, data, true); changed = true; }
+            });
+            if (acao === 'inicio' && observacaoTeste && String(t.torre) === torre) {
+              t.registrosObservacao = Array.isArray(t.registrosObservacao) ? t.registrosObservacao : [];
+              const existing = t.registrosObservacao.find(function(x) { return Number(x.pavimento) === pavimento; });
+              if (existing) { existing.observacao = observacaoTeste; existing.statusObservacao = 'Pendente'; }
+              else t.registrosObservacao.push({pavimento:pavimento, observacao:observacaoTeste, statusObservacao:'Pendente', pressao:pressaoTeste});
+              changed = true;
+            }
+          });
+        }
+      } else if (method === 'marcarObservacaoTesteCorrigida') {
+        if (methodCache === 'consultarTeste' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && String(cacheArgs[2]) === nome && value) {
+          value.statusObservacao = 'Corrigida'; changed = true;
+        } else if (methodCache === 'listarTestesPavimento' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && Array.isArray(value)) {
+          value.forEach(function(item) { if (String(item.nome) === nome) { item.temObservacao = false; changed = true; } });
+        } else if (methodCache === 'acompanhamentoTeste' && String(cacheArgs[0]) === nome && Array.isArray(value)) {
+          value.forEach(function(t) { if (String(t.torre) === torre) (t.registrosObservacao || []).forEach(function(x) { if (Number(x.pavimento) === pavimento) { x.statusObservacao = 'Corrigida'; changed = true; } }); });
+        }
+      } else if (method === 'registrarObservacao') {
+        if (methodCache === 'listarObservacoes' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && String(cacheArgs[2]) === nome && Array.isArray(value)) {
+          value.unshift({linha:-Date.now(), id:-Date.now(), dataHora:'Pendente de sincronização', usuario:'Registro neste aparelho', observacao:String(args[3] || ''), status:'Pendente', dataCorrecao:''});
+          changed = true;
+        } else if (methodCache === 'listarServicosPavimento' && String(cacheArgs[0]) === torre && Number(cacheArgs[1]) === pavimento && Array.isArray(value)) {
+          value.forEach(function(item) { if (String(item.nome) === nome) { item.temObservacao = true; item.temObservacaoRegistrada = true; changed = true; } });
+        } else if (methodCache === 'acompanhamentoServico' && String(cacheArgs[0]) === nome && Array.isArray(value)) {
+          value.forEach(function(t) { if (String(t.torre) === torre) (t.pavimentos || []).forEach(function(p) { if (Number(p.pavimento) === pavimento) { p.temObservacao = true; p.temObservacaoPendente = true; if (!Array.isArray(t.pavimentosComObservacao)) t.pavimentosComObservacao = []; if (!t.pavimentosComObservacao.includes(pavimento)) t.pavimentosComObservacao.push(pavimento); changed = true; } }); });
+        }
+      }
+      if (changed) updates.push(fvsOfflinePut('cache', record));
+    });
+    return Promise.all(updates);
+  }).catch(function(error) { console.warn('Controle FVS: não foi possível atualizar cache offline.', error); });
+}
+function fvsOfflineValidateQueueable(method, args) {
+  if (method === 'registrarData') {
+    const key = fvsOfflineCacheKey('listarServicosPavimento', [args[0], String(args[1])]);
+    return fvsOfflineGet('cache', key).then(function(r) {
+      const item = r && Array.isArray(r.value) ? r.value.find(function(x) { return String(x.nome) === String(args[2]); }) : null;
+      if (!item) throw new Error('Para registrar este serviço offline, consulte primeiro a lista de serviços deste pavimento enquanto estiver conectado.');
+      if (String(args[3]) === 'inicio' && item.status !== 'Não iniciado') throw new Error('Este serviço já não está como “Não iniciado” no cache local. Atualize os dados conectado antes de registrar novamente.');
+      if (String(args[3]) === 'termino' && item.status !== 'Em andamento') throw new Error('Só é possível concluir offline um serviço que esteja “Em andamento” no cache local.');
+      if (String(args[3]) === 'termino' && item.temObservacao) throw new Error('Não é possível concluir offline: existe uma observação pendente. Corrija e sincronize quando houver internet.');
+    });
+  }
+  if (method === 'registrarTeste') {
+    const key = fvsOfflineCacheKey('consultarTeste', [args[0], String(args[1]), args[2]]);
+    return fvsOfflineGet('cache', key).then(function(r) {
+      if (!r || !r.value) throw new Error('Para registrar este teste offline, abra os detalhes desse teste enquanto estiver conectado primeiro.');
+      if (String(args[3]) === 'inicio' && r.value.status !== 'Não iniciado') throw new Error('Este teste já não está como “Não iniciado” no cache local. Atualize os dados conectado antes de registrar novamente.');
+      if (String(args[3]) === 'termino' && r.value.status !== 'Em andamento') throw new Error('Só é possível concluir offline um teste que esteja “Em andamento” no cache local.');
+      if (String(args[3]) === 'termino' && String(r.value.observacao || '').trim() && String(r.value.statusObservacao || '') !== 'Corrigida') throw new Error('Não é possível concluir offline: a observação do teste ainda não está marcada como corrigida.');
+    });
+  }
+  if (method === 'registrarObservacao') {
+    const key = fvsOfflineCacheKey('listarServicosPavimento', [args[0], Number(args[1])]);
+    return fvsOfflineGet('cache', key).then(function(r) {
+      const item = r && Array.isArray(r.value) ? r.value.find(function(x) { return String(x.nome) === String(args[2]); }) : null;
+      if (!item || item.status !== 'Em andamento') throw new Error('Só é possível registrar offline em um serviço em andamento que tenha sido consultado enquanto conectado.');
+    });
+  }
+  if (method === 'marcarObservacaoTesteCorrigida') {
+    const key = fvsOfflineCacheKey('consultarTeste', [args[0], Number(args[1]), args[2]]);
+    return fvsOfflineGet('cache', key).then(function(r) {
+      if (!r || !r.value || !String(r.value.observacao || '').trim()) throw new Error('Os detalhes deste teste com observação precisam estar salvos no aparelho antes de corrigir offline.');
+    });
+  }
+  return Promise.resolve();
+}
+function fvsOfflineEnqueue(method, args, handlers) {
+  return fvsOfflineValidateQueueable(method, args).then(function() {
+    return fvsOfflineGetAll('fila').then(function(items) {
+      const duplicada = (items || []).some(function(item) { return item.state === 'pendente' && item.method === method && JSON.stringify(item.args || []) === JSON.stringify(args || []); });
+      if (duplicada) throw new Error('Esta mesma ação já está na fila offline. Aguarde a sincronização para evitar duplicar o registro.');
+    });
+  }).then(function() {
+    const id = (window.crypto && typeof window.crypto.randomUUID === 'function') ? window.crypto.randomUUID() : ('fvs-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2));
+    const item = {id:id, method:method, args:args, createdAt:new Date().toISOString(), state:'pendente', error:''};
+    return fvsOfflinePut('fila', item).then(function() {
+      return fvsOfflinePatchCache(method, args).then(function() {
+        fvsOfflineRenderBanner();
+        fvsOfflineRunSuccess(handlers.success, {__fvsOfflineQueued:true, id:id});
+      });
+    });
+  }).catch(function(error) {
+    if (handlers.failure) handlers.failure(error);
+    else mostrarMensagem('🔴 ' + (error.message || error), 'erro');
+  });
+}
+function fvsOfflineRunSuccess(handler, value) {
+  if (typeof handler !== 'function') return;
+  const prior = window.__fvsRespostaOfflinePendente;
+  window.__fvsRespostaOfflinePendente = Boolean(value && value.__fvsOfflineQueued);
+  try { handler(value); } finally { window.__fvsRespostaOfflinePendente = prior || false; }
+}
+function fvsOfflineInvoke(method, args, handlers) {
+  const key = fvsOfflineCacheKey(method, args);
+  if (!navigator.onLine) {
+    if (FVS_OFFLINE_MUTATIONS.has(method)) {
+      if (FVS_OFFLINE_QUEUEABLE.has(method)) { fvsOfflineEnqueue(method, args, handlers); return; }
+      if (handlers.failure) handlers.failure(new Error('Esta ação exige internet e não foi colocada na fila offline. Conecte-se e tente novamente.'));
+      else mostrarMensagem('⚠️ Esta ação exige internet; nada foi alterado.', 'aviso');
+      return;
+    }
+    if (!fvsOfflineCanCache(method)) {
+      if (handlers.failure) handlers.failure(new Error('Esta consulta exige internet.')); return;
+    }
+    fvsOfflineGet('cache', key).then(function(record) {
+      if (record && Object.prototype.hasOwnProperty.call(record, 'value')) {
+        fvsOfflineRenderBanner();
+        fvsOfflineRunSuccess(handlers.success, record.value);
+      } else if (handlers.failure) {
+        handlers.failure(new Error('Sem internet e esta consulta ainda não foi salva neste aparelho. Abra essa tela conectado para disponibilizá-la offline.'));
+      } else {
+        mostrarMensagem('⚠️ Sem internet: consulte esta tela conectado antes de usá-la offline.', 'aviso');
+      }
+    }).catch(function(error) { if (handlers.failure) handlers.failure(error); });
+    return;
+  }
+  const success = function(data) {
+    FVS_OFFLINE_SERVER_UNREACHABLE = false;
+    const next = fvsOfflineCanCache(method) ? fvsOfflinePut('cache', {key:key, value:data, updatedAt:new Date().toISOString()}).catch(function(e) { console.warn('Cache offline não salvo.', e); }) : Promise.resolve();
+    next.then(function() { fvsOfflineRenderBanner(); fvsOfflineRunSuccess(handlers.success, data); });
+  };
+  const failure = function(error) {
+    if (fvsOfflineCanCache(method)) {
+      fvsOfflineGet('cache', key).then(function(record) {
+        if (record && Object.prototype.hasOwnProperty.call(record, 'value')) {
+          FVS_OFFLINE_SERVER_UNREACHABLE = true;
+          fvsOfflineRenderBanner();
+          fvsOfflineRunSuccess(handlers.success, record.value);
+          mostrarMensagem('⚠️ Sem resposta do servidor; exibindo a última cópia salva neste aparelho.', 'aviso');
+        } else if (handlers.failure) handlers.failure(error);
+        else mostrarErro(error);
+      }).catch(function() { if (handlers.failure) handlers.failure(error); });
+    } else if (handlers.failure) handlers.failure(error);
+    else mostrarErro(error);
+  };
+  try {
+    let run = FVS_SERVER_RUN.withSuccessHandler(success).withFailureHandler(failure);
+    run[method].apply(run, args);
+  } catch (error) { failure(error); }
+}
+function fvsOfflineMethodLabel(item) {
+  const a = item.args || [];
+  const towerFloor = a[0] ? String(a[0]) + (a[1] ? ' · ' + a[1] + 'º pav.' : '') : '';
+  if (item.method === 'registrarData') return (a[3] === 'inicio' ? 'Iniciar serviço: ' : 'Concluir serviço: ') + a[2] + ' — ' + towerFloor;
+  if (item.method === 'registrarTeste') return (a[3] === 'inicio' ? 'Iniciar teste: ' : 'Concluir teste: ') + a[2] + ' — ' + towerFloor;
+  if (item.method === 'registrarObservacao') return 'Nova observação: ' + a[2] + ' — ' + towerFloor;
+  if (item.method === 'marcarObservacaoTesteCorrigida') return 'Corrigir observação do teste: ' + a[2] + ' — ' + towerFloor;
+  return item.method;
+}
+function fvsOfflineRenderBanner() {
+  const banner = document.getElementById('fvsOfflineBanner');
+  if (!banner) return;
+  const state = document.getElementById('fvsOfflineEstado');
+  const count = document.getElementById('fvsOfflineContagem');
+  const syncButton = document.getElementById('fvsOfflineSyncButton');
+  const queueButton = document.getElementById('fvsOfflineQueueButton');
+  if (state) state.textContent = !navigator.onLine ? '🟠 Sem internet · usando dados salvos quando disponíveis' : (FVS_OFFLINE_SERVER_UNREACHABLE ? '🟡 Conexão instável · mostrando dados salvos quando disponíveis' : '🟢 Conectado');
+  fvsOfflineGetAll('fila').then(function(items) {
+    items = items || [];
+    const pending = items.filter(function(i) { return i.state === 'pendente'; }).length;
+    const errors = items.filter(function(i) { return i.state !== 'pendente'; }).length;
+    if (count) count.textContent = pending + ' pendente(s)' + (errors ? ' · ' + errors + ' com falha/conferência necessária' : '');
+    if (syncButton) { syncButton.disabled = !navigator.onLine || pending === 0 || FVS_OFFLINE_SYNCING || errors > 0; syncButton.textContent = FVS_OFFLINE_SYNCING ? 'Sincronizando…' : 'Sincronizar'; }
+    if (queueButton) queueButton.textContent = FVS_OFFLINE_QUEUE_OPEN ? 'Ocultar fila' : 'Ver fila';
+    if (FVS_OFFLINE_QUEUE_OPEN) fvsOfflineRenderQueue(items);
+  }).catch(function() {
+    if (count) count.textContent = 'Armazenamento local indisponível';
+    if (syncButton) syncButton.disabled = true;
+  });
+}
+function fvsOfflineRenderQueue(items) {
+  const panel = document.getElementById('fvsOfflineFilaPainel');
+  if (!panel) return;
+  panel.hidden = !FVS_OFFLINE_QUEUE_OPEN;
+  if (!FVS_OFFLINE_QUEUE_OPEN) { panel.innerHTML = ''; return; }
+  panel.innerHTML = '';
+  if (!items.length) { panel.textContent = 'Não há alterações aguardando sincronização.'; return; }
+  items.sort(function(a,b) { return String(a.createdAt).localeCompare(String(b.createdAt)); });
+  items.forEach(function(item) {
+    const row = document.createElement('div'); row.className = 'fvs-offline-item';
+    const title = document.createElement('div'); title.className = 'fvs-offline-item-title'; title.textContent = fvsOfflineMethodLabel(item); row.appendChild(title);
+    const detail = document.createElement('div'); detail.className = 'fvs-offline-item-detail'; detail.textContent = (item.state === 'pendente' ? 'Aguardando sincronização' : (item.state === 'erro' ? 'Servidor recusou a ação' : 'Resultado incerto — confira a planilha antes de decidir')) + (item.error ? ': ' + item.error : ''); row.appendChild(detail);
+    if (item.state !== 'pendente') {
+      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'fvs-offline-remove'; remove.textContent = 'Retirar da fila';
+      remove.addEventListener('click', function() {
+        if (!confirm('Retirar esta ação da fila? Confira antes a planilha: em alguns casos ela pode já ter sido aplicada. Se não foi aplicada, será necessário registrar novamente conectado.')) return;
+        fvsOfflineDelete('fila', item.id).then(function() {
+          return fvsOfflineInvalidateItemCache(item).catch(function() {});
+        }).then(function() {
+          fvsOfflineRenderBanner();
+          if (navigator.onLine && typeof atualizarPagina === 'function') atualizarPagina();
+          mostrarMensagem('Ação retirada da fila. Confira a tela atualizada e, se a alteração não estiver na planilha, registre-a novamente conectado.', 'aviso', true);
+        });
+      });
+      row.appendChild(remove);
+    }
+    panel.appendChild(row);
+  });
+}
+function fvsOfflineToggleQueue() {
+  FVS_OFFLINE_QUEUE_OPEN = !FVS_OFFLINE_QUEUE_OPEN;
+  const panel = document.getElementById('fvsOfflineFilaPainel');
+  if (panel) panel.hidden = !FVS_OFFLINE_QUEUE_OPEN;
+  fvsOfflineRenderBanner();
+}
+function fvsOfflineSyncOne(item) {
+  return new Promise(function(resolve) {
+    const success = function(result) {
+      if (result && result.ok) {
+        fvsOfflineDelete('fila', item.id).then(function() {
+          return item.method === 'registrarObservacao' ? fvsOfflineInvalidateItemCache(item) : Promise.resolve();
+        }).then(function() { resolve({ok:true, resultado:result.resultado}); }).catch(function() { resolve({ok:false, uncertain:true, message:'A ação foi recebida, mas não foi possível atualizar a fila/cache local.'}); });
+      } else {
+        resolve({ok:false, uncertain:Boolean(result && result.incerto), message:result && result.mensagem ? result.mensagem : 'O servidor não confirmou a ação.'});
+      }
+    };
+    const failure = function(error) { resolve({ok:false, uncertain:true, message:'Não foi possível confirmar a resposta do servidor: ' + String(error && error.message || error || 'erro desconhecido')}); };
+    try { FVS_SERVER_RUN.withSuccessHandler(success).withFailureHandler(failure).executarAcaoOffline(item.id, item.method, item.args || [], item.createdAt); }
+    catch (error) { failure(error); }
+  });
+}
+function fvsOfflineSync() {
+  if (FVS_OFFLINE_SYNCING || !navigator.onLine) { fvsOfflineRenderBanner(); return; }
+  FVS_OFFLINE_SYNCING = true;
+  fvsOfflineRenderBanner();
+  fvsOfflineGetAll('fila').then(function(items) {
+    items = (items || []).sort(function(a,b) { return String(a.createdAt).localeCompare(String(b.createdAt)); });
+    const firstProblem = items.find(function(i) { return i.state !== 'pendente'; });
+    if (firstProblem) throw new Error('Há uma ação que exige conferência. Abra “Ver fila”, confira a planilha e resolva essa pendência antes de continuar.');
+    let synced = 0;
+    function next(index) {
+      if (index >= items.length) return Promise.resolve({done:true, synced:synced});
+      if (!navigator.onLine) return Promise.resolve({done:false, offline:true, synced:synced});
+      return fvsOfflineSyncOne(items[index]).then(function(result) {
+        if (!result.ok) {
+          const current = items[index]; current.state = result.uncertain ? 'incerto' : 'erro'; current.error = result.message;
+          const invalidar = result.uncertain ? Promise.resolve() : fvsOfflineInvalidateItemCache(current).catch(function() {});
+          return invalidar.then(function() { return fvsOfflinePut('fila', current); }).then(function() { return {done:false, error:true, synced:synced, message:result.message, uncertain:result.uncertain}; });
+        }
+        synced++;
+        return next(index + 1);
+      });
+    }
+    return next(0).then(function(result) {
+      FVS_OFFLINE_SYNCING = false;
+      fvsOfflineRenderBanner();
+      if (result.done && synced) {
+        if (navigator.onLine && typeof atualizarPagina === 'function') atualizarPagina();
+        mostrarMensagem('✅ ' + synced + ' alteração(ões) offline sincronizada(s) com a planilha.');
+      } else if (result.error) {
+        if (!result.uncertain && navigator.onLine && typeof atualizarPagina === 'function') atualizarPagina();
+        mostrarMensagem('⚠️ A sincronização parou: ' + result.message + ' Abra “Ver fila” para conferir.', 'aviso', true);
+      }
+      else if (result.offline) mostrarMensagem('⚠️ A conexão caiu; as alterações restantes continuam salvas neste aparelho.', 'aviso', true);
+    });
+  }).catch(function(error) {
+    FVS_OFFLINE_SYNCING = false;
+    fvsOfflineRenderBanner();
+    if (error && error.message) mostrarMensagem('⚠️ ' + error.message, 'aviso', true);
+  });
+}
+function fvsOfflineBaixarListas() {
+  if (!navigator.onLine) { mostrarMensagem('Conecte-se à internet para baixar os dados para uso offline.', 'aviso'); return; }
+  const btn = document.getElementById('fvsOfflineDownloadButton');
+  if (btn) { btn.disabled = true; btn.textContent = 'Baixando…'; }
+  const jobs = [];
+  ['Torre A','Torre B','Torre C','Torre D'].forEach(function(torre) {
+    for (let pavimento=1; pavimento<=24; pavimento++) {
+      jobs.push({metodo:'listarServicosPavimento', args:[torre,pavimento]});
+      jobs.push({metodo:'listarTestesPavimento', args:[torre,pavimento]});
+    }
+  });
+  let next=0, done=0, failed=0, running=0;
+  function finish(){
+    if(done+failed >= jobs.length){
+      if(btn){btn.disabled=false;btn.textContent='Baixar dados offline';}
+      fvsOfflineRenderBanner();
+      mostrarMensagem('Download offline concluído: '+done+' listas salvas'+(failed ? ', '+failed+' falharam. Confira a conexão e tente novamente.' : '.') , failed ? 'aviso' : 'sucesso', true);
+      return;
+    }
+    while(running<4 && next<jobs.length){
+      const job=jobs[next++]; running++;
+      const handlers={success:function(){done++;running--;if(btn)btn.textContent='Baixando '+done+'/'+jobs.length;finish();},failure:function(){failed++;running--;finish();}};
+      fvsOfflineInvoke(job.metodo,job.args,handlers);
+    }
+  }
+  finish();
+}
+
+function fvsOfflineInit() {
+  const banner = document.getElementById('fvsOfflineBanner');
+  if (!banner) return;
+  fvsOfflineDb().then(function() {
+    fvsOfflineRenderBanner();
+    if (navigator.onLine) fvsOfflineSync();
+  }).catch(function(error) {
+    const state = document.getElementById('fvsOfflineEstado');
+    if (state) state.textContent = '⚠️ Armazenamento offline indisponível neste navegador';
+    console.warn(error);
+  });
+  window.addEventListener('online', function() { fvsOfflineRenderBanner(); fvsOfflineSync(); });
+  window.addEventListener('offline', fvsOfflineRenderBanner);
+}
+function fvsOfflineRun() {
+  const handlers = {success:null, failure:null};
+  let proxy;
+  proxy = new Proxy({}, {get:function(_target, property) {
+    if (property === 'withSuccessHandler') return function(fn) { handlers.success = fn; return proxy; };
+    if (property === 'withFailureHandler') return function(fn) { handlers.failure = fn; return proxy; };
+    return function() { fvsOfflineInvoke(String(property), Array.prototype.slice.call(arguments), handlers); return proxy; };
+  }});
+  return proxy;
+}
+
+
+  /* =====================================================
+     VARIÁVEIS
+     ===================================================== */
+
+  let servicosAtuais = [];
+
+  let testesAtuais = [];
+
+  let servicosAcompanhamentoAtuais = [];
+
+  let cacheAcompanhamentoServicos = {};
+
+  let carregamentoTorreEmAndamento = false;
+
+  let telaAnterior = 'telaServicos';
+  let fvsPendenciasAtuais = [];
+  let callbackSalvarDataFvs = null;
+
+
+  /* =====================================================
+     NAVEGAÇÃO
+     ===================================================== */
+
+  function esconderTodasTelas() {
+
+    const telas = [
+
+      'telaServicos',
+      'telaTestes',
+      'telaDetalhes',
+      'telaAcompanhamento',
+      'telaAcompanhamentoServicos',
+      'telaAcompanhamentoTorre',
+      'telaFvsCiclo',
+      'telaDiarioObras',
+      'telaHistorico'
+
+    ];
+
+    telas.forEach(
+      function(id) {
+
+        const elemento =
+          document.getElementById(id);
+
+        if (elemento) {
+
+          elemento.classList.add(
+            'oculto'
+          );
+
+        }
+
+      }
+    );
+
+    document
+      .getElementById(
+        'menuPrincipal'
+      )
+      .classList.add(
+        'oculto'
+      );
+  }
+
+
+  function voltarMenu() {
+
+    esconderTodasTelas();
+
+    document
+      .getElementById(
+        'menuPrincipal'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+
+  function voltarLista() {
+
+    esconderTodasTelas();
+
+    if (
+      telaAnterior ===
+      'telaTestes'
+    ) {
+
+      document
+        .getElementById(
+          'telaTestes'
+        )
+        .classList.remove(
+          'oculto'
+        );
+
+      carregarTestes();
+
+      return;
+
+    }
+
+    if (
+      telaAnterior ===
+      'telaHistorico'
+    ) {
+
+      document
+        .getElementById(
+          'telaHistorico'
+        )
+        .classList.remove(
+          'oculto'
+        );
+
+      carregarHistorico();
+
+      return;
+
+    }
+
+    document
+      .getElementById(
+        'telaServicos'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    carregarServicos();
+  }
+
+
+  function atualizarPagina() {
+
+    /*
+     * Não usar window.location.reload() dentro do web app do
+     * Apps Script: em alguns navegadores isso recarrega o iframe
+     * e pode deixar a tela branca.
+     * Atualiza os dados da tela aberta sem reiniciar o aplicativo.
+     */
+    const telas = [
+      'telaServicos',
+      'telaTestes',
+      'telaDetalhes',
+      'telaAcompanhamento',
+      'telaAcompanhamentoServicos',
+      'telaAcompanhamentoTorre',
+      'telaFvsCiclo',
+      'telaHistorico'
+    ];
+
+    let telaAtiva = '';
+
+    for (const id of telas) {
+      const elemento = document.getElementById(id);
+      if (elemento && !elemento.classList.contains('oculto')) {
+        telaAtiva = id;
+        break;
+      }
+    }
+
+    if (telaAtiva === 'telaServicos') {
+      atualizarServicos();
+      return;
+    }
+
+    if (telaAtiva === 'telaTestes') {
+      carregarTestes();
+      return;
+    }
+
+    if (telaAtiva === 'telaDetalhes') {
+      if (contextoDetalhesAtual && tipoDetalhesAtual === 'servico') {
+        abrirServicoComContexto(
+          contextoDetalhesAtual.nome,
+          contextoDetalhesAtual.torre,
+          contextoDetalhesAtual.pavimento,
+          contextoDetalhesAtual.origem
+        );
+        return;
+      }
+
+      if (contextoDetalhesAtual && tipoDetalhesAtual === 'teste') {
+        abrirTesteComContexto(
+          contextoDetalhesAtual.nome,
+          contextoDetalhesAtual.torre,
+          contextoDetalhesAtual.pavimento,
+          contextoDetalhesAtual.origem
+        );
+        return;
+      }
+    }
+
+    if (telaAtiva === 'telaAcompanhamento') {
+      carregarAcompanhamento();
+      return;
+    }
+
+    if (telaAtiva === 'telaAcompanhamentoServicos') {
+      const selectServico = document.getElementById('servicoAcompanhamento');
+      if (selectServico && selectServico.value) {
+        carregarAcompanhamentoServico();
+      } else {
+        carregarListaServicosAcompanhamento();
+      }
+      return;
+    }
+
+    if (telaAtiva === 'telaAcompanhamentoTorre') {
+      carregarAcompanhamentoTorre();
+      return;
+    }
+
+    if (telaAtiva === 'telaFvsCiclo') {
+      carregarFvsCiclo();
+      return;
+    }
+
+    if (telaAtiva === 'telaHistorico') {
+      carregarHistorico();
+      return;
+    }
+
+    mostrarMensagem('✅ Você já está na tela inicial. Abra uma consulta para atualizar os dados.', 'sucesso');
+
+  }
+
+
+  function atualizarServicos() {
+
+    const torre =
+      document
+        .getElementById(
+          'torreServicos'
+        )
+        .value;
+
+    const pavimento =
+      document
+        .getElementById(
+          'pavimentoServicos'
+        )
+        .value;
+
+    if (!torre || !pavimento) {
+      mostrarMensagem(
+        '🔴 Selecione a torre e o pavimento antes de atualizar.',
+        'erro'
+      );
+      return;
+    }
+
+    carregarServicos();
+
+  }
+
+
+  function abrirServicos() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaServicos';
+
+    document
+      .getElementById(
+        'telaServicos'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    limparTelaServicos();
+
+  }
+
+
+  function abrirTestes() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaTestes';
+
+    document
+      .getElementById(
+        'telaTestes'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    limparTelaTestes();
+
+  }
+
+
+  function abrirAcompanhamento() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaAcompanhamento';
+
+    document
+      .getElementById(
+        'telaAcompanhamento'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+  }
+
+
+  function abrirAcompanhamentoServicos() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaAcompanhamentoServicos';
+
+    document
+      .getElementById(
+        'telaAcompanhamentoServicos'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    carregarListaServicosAcompanhamento();
+
+  }
+
+
+  function abrirAcompanhamentoTorre() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaAcompanhamentoTorre';
+
+    document
+      .getElementById(
+        'telaAcompanhamentoTorre'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    document
+      .getElementById(
+        'resultadoAcompanhamentoTorre'
+      )
+      .innerHTML = '';
+
+  }
+
+
+  function abrirFvsCiclo() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaFvsCiclo';
+
+    document
+      .getElementById(
+        'telaFvsCiclo'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    carregarFvsCiclo();
+
+  }
+
+
+  function abrirHistorico() {
+
+    esconderTodasTelas();
+
+    telaAnterior =
+      'telaHistorico';
+
+    document
+      .getElementById(
+        'telaHistorico'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    carregarHistorico();
+
+  }
+
+
+  /* =====================================================
+     SERVIÇOS
+     ===================================================== */
+
+  function limparTelaServicos() {
+
+    document
+      .getElementById(
+        'listaServicos'
+      )
+      .innerHTML = '';
+
+    document
+      .getElementById(
+        'filtroCicloServicosContainer'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+    document
+      .getElementById(
+        'filtroCicloServicos'
+      )
+      .innerHTML = `
+        <option value="">
+          Todos os ciclos
+        </option>
+      `;
+
+    const buscaContainer =
+      document.getElementById(
+        'buscaServicoServicosContainer'
+      );
+
+    if (buscaContainer) {
+      buscaContainer.classList.add('oculto');
+    }
+
+    const busca =
+      document.getElementById(
+        'buscaServicoServicos'
+      );
+
+    if (busca) {
+      busca.value = '';
+    }
+
+  }
+
+
+  function carregarServicos() {
+
+    const torre =
+      document
+        .getElementById(
+          'torreServicos'
+        )
+        .value;
+
+    const pavimento =
+      document
+        .getElementById(
+          'pavimentoServicos'
+        )
+        .value;
+
+    if (
+      !torre ||
+      !pavimento
+    ) {
+
+      mostrarMensagem(
+        '🔴 Selecione a torre e o pavimento.',
+        'erro'
+      );
+
+      return;
+
+    }
+
+    document
+      .getElementById(
+        'listaServicos'
+      )
+      .innerHTML =
+      '<div class="card carregando">Carregando serviços...</div>';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          servicosAtuais =
+            Array.isArray(dados)
+              ? dados
+              : [];
+
+          montarFiltroCiclosServicos(
+            servicosAtuais
+          );
+
+          const buscaContainer =
+            document.getElementById(
+              'buscaServicoServicosContainer'
+            );
+
+          if (buscaContainer) {
+            buscaContainer.classList.remove('oculto');
+          }
+
+          filtrarServicos();
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .listarServicosPavimento(
+        torre,
+        pavimento
+      );
+  }
+
+
+  function montarFiltroCiclosServicos(
+    servicos
+  ) {
+
+    const container =
+      document.getElementById(
+        'filtroCicloServicosContainer'
+      );
+
+    const select =
+      document.getElementById(
+        'filtroCicloServicos'
+      );
+
+    const ciclos = [];
+
+    servicos.forEach(
+      function(item) {
+
+        const ciclo =
+          item.ciclo ||
+          '';
+
+        if (
+          ciclo &&
+          !ciclos.includes(
+            ciclo
+          )
+        ) {
+
+          ciclos.push(
+            ciclo
+          );
+
+        }
+
+      }
+    );
+
+    ciclos.sort();
+
+    select.innerHTML = `
+      <option value="">
+        Todos os ciclos
+      </option>
+    `;
+
+    ciclos.forEach(
+      function(ciclo) {
+
+        select.innerHTML += `
+          <option value="${escapar(ciclo)}">
+            ${escapar(ciclo)}
+          </option>
+        `;
+
+      }
+    );
+
+    if (
+      ciclos.length > 0
+    ) {
+
+      container.classList.remove(
+        'oculto'
+      );
+
+    } else {
+
+      container.classList.add(
+        'oculto'
+      );
+
+    }
+
+  }
+
+
+  function filtrarServicos() {
+
+    const lista =
+      document.getElementById(
+        'listaServicos'
+      );
+
+    const select =
+      document.getElementById(
+        'filtroCicloServicos'
+      );
+
+    const busca =
+      document.getElementById(
+        'buscaServicoServicos'
+      );
+
+    const cicloSelecionado =
+      select
+        ? select.value
+        : '';
+
+    const textoBusca =
+      normalizarJS(
+        busca
+          ? busca.value
+          : ''
+      );
+
+    const filtrados =
+      servicosAtuais.filter(
+        function(item) {
+
+          const atendeCiclo =
+            !cicloSelecionado ||
+            String(
+              item.ciclo || ''
+            ) ===
+            String(
+              cicloSelecionado
+            );
+
+          if (!atendeCiclo) {
+            return false;
+          }
+
+          if (!textoBusca) {
+            return true;
+          }
+
+          const nome =
+            item.nome ||
+            item.servico ||
+            item.item ||
+            '';
+
+          return normalizarJS(
+            nome
+          ).includes(
+            textoBusca
+          );
+
+        }
+      );
+
+    if (
+      filtrados.length === 0
+    ) {
+
+      lista.innerHTML = `
+        <div class="sem-resultados">
+          Nenhum serviço encontrado.
+        </div>
+      `;
+
+      return;
+
+    }
+
+    lista.innerHTML =
+      filtrados
+        .map(
+          function(item) {
+
+            const nome =
+              item.nome ||
+              item.servico ||
+              item.item ||
+              '';
+
+            const ciclo =
+              item.ciclo ||
+              '';
+
+            const status =
+              item.status ||
+              '';
+
+            return `
+
+              <div
+                class="item-lista"
+                onclick="abrirServico(
+                  '${escapar(nome)}'
+                )">
+
+                ${
+                  ciclo
+                    ? `
+                      <div class="servico-acompanhamento-ciclo">
+
+                        ${escapar(ciclo)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="item-lista-nome">
+
+                  🔧 ${escapar(
+                    nome
+                  )}
+
+                </div>
+
+                ${
+                  status
+                    ? `
+                      <div class="item-lista-info">
+
+                        ${montarStatus(status)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="indicador-observacao ${status === 'Concluído' && item.temObservacaoRegistrada ? 'observacao-resolvida' : (item.temObservacao ? 'com-observacao' : 'sem-observacao')}">
+                  <span class="bolinha"></span>
+                  <span>${status === 'Concluído' && item.temObservacaoRegistrada ? 'Resolvido' : (item.temObservacao ? 'Observação pendente' : 'Sem observações pendentes')}</span>
+                </div>
+
+                <div class="item-lista-rodape">
+
+                  Toque para abrir
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join('');
+
+  }
+
+
+  function abrirServico(
+    nomeServico
+  ) {
+
+    const torre =
+      document
+        .getElementById(
+          'torreServicos'
+        )
+        .value;
+
+    const pavimento =
+      document
+        .getElementById(
+          'pavimentoServicos'
+        )
+        .value;
+
+    abrirServicoComContexto(
+      nomeServico,
+      torre,
+      pavimento,
+      'telaServicos'
+    );
+
+  }
+
+
+  function abrirServicoAcompanhamento(
+    nomeServico,
+    torre,
+    pavimento
+  ) {
+
+    abrirServicoComContexto(
+      nomeServico,
+      torre,
+      pavimento,
+      telaAnterior
+    );
+
+  }
+
+
+  function abrirServicoComContexto(
+    nomeServico,
+    torre,
+    pavimento,
+    origem
+  ) {
+
+    telaAnterior =
+      origem ||
+      'telaServicos';
+
+    esconderTodasTelas();
+
+    document
+      .getElementById(
+        'telaDetalhes'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    const conteudo =
+      document.getElementById(
+        'detalhesConteudo'
+      );
+
+    conteudo.innerHTML = `
+
+      <div class="card">
+
+        <div class="detalhe-header">
+
+          <div class="detalhe-nome">
+
+            🔧 ${escapar(
+              nomeServico
+            )}
+
+          </div>
+
+          <div class="detalhe-local">
+            🏢 <span class="torre-badge ${normalizarJS(torre).includes('torre a') ? 'torre-a' : normalizarJS(torre).includes('torre b') ? 'torre-b' : normalizarJS(torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre)}</span>
+            — <strong class="pavimento-destaque">${pavimento}º pavimento</strong>
+          </div>
+
+        </div>
+
+        <div class="carregando">
+
+          Carregando...
+
+        </div>
+
+      </div>
+
+    `;
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          mostrarDetalhesServico(
+            dados,
+            nomeServico,
+            torre,
+            pavimento
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .consultarServico(
+        torre,
+        pavimento,
+        nomeServico
+      );
+
+  }
+
+
+  function mostrarDetalhesServico(
+    dados,
+    nomeServico,
+    torre,
+    pavimento
+  ) {
+
+    const conteudo =
+      document.getElementById(
+        'detalhesConteudo'
+      );
+
+    const status =
+      dados &&
+      dados.status
+        ? dados.status
+        : 'Não iniciado';
+
+    const dataAbertura =
+      dados &&
+      dados.dataAbertura
+        ? dados.dataAbertura
+        : 'Não informado';
+
+    const inicio =
+      dados &&
+      dados.inicio
+        ? dados.inicio
+        : 'Não informado';
+
+    const termino =
+      dados &&
+      dados.termino
+        ? dados.termino
+        : 'Não informado';
+
+    const ciclo =
+      dados &&
+      dados.ciclo
+        ? dados.ciclo
+        : '';
+
+    conteudo.innerHTML = `
+
+      <div class="card">
+
+        <div class="detalhe-header">
+
+          <div class="detalhe-nome">
+
+            🔧 ${escapar(
+              nomeServico
+            )}
+
+          </div>
+
+          ${
+            ciclo
+              ? `
+                <div class="servico-acompanhamento-ciclo">
+
+                  ${escapar(ciclo)}
+
+                </div>
+              `
+              : ''
+          }
+
+          <div class="detalhe-local">
+            🏢 <span class="torre-badge ${normalizarJS(torre).includes('torre a') ? 'torre-a' : normalizarJS(torre).includes('torre b') ? 'torre-b' : normalizarJS(torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre)}</span>
+            — <strong class="pavimento-destaque">${pavimento}º pavimento</strong>
+          </div>
+
+        </div>
+
+        <div class="detalhe-status">
+
+          ${montarStatus(status)}
+
+        </div>
+
+        <div class="detalhe-datas">
+
+          🟣 Abertura:
+          <strong>
+            ${escapar(dataAbertura)}
+          </strong>
+
+          <br>
+
+          🟢 Início:
+          <strong>
+            ${escapar(inicio)}
+          </strong>
+
+          <br>
+
+          🔵 Término:
+          <strong>
+            ${escapar(termino)}
+          </strong>
+
+        </div>
+
+        <div>
+
+          ${
+            status === 'Não iniciado'
+              ? `
+                <button
+                  class="btn-acao btn-iniciar"
+                  onclick="registrarServico(
+                    '${escapar(torre)}',
+                    '${pavimento}',
+                    '${escapar(nomeServico)}',
+                    'inicio'
+                  )">
+
+                  🟢 Iniciar serviço
+
+                </button>
+              `
+              : ''
+          }
+
+          ${
+            status === 'Em andamento'
+              ? `
+                <button
+                  class="btn-acao btn-concluir"
+                  onclick="registrarServico(
+                    '${escapar(torre)}',
+                    '${pavimento}',
+                    '${escapar(nomeServico)}',
+                    'termino'
+                  )">
+
+                  🔵 Concluir serviço
+
+                </button>
+              `
+              : ''
+          }
+
+          ${
+            status === 'Concluído'
+              ? `
+                <button
+                  class="btn-acao btn-reabrir"
+                  onclick="reabrirServicoTela(
+                    '${escapar(torre)}',
+                    '${pavimento}',
+                    '${escapar(nomeServico)}'
+                  )">
+
+                  🔄 Reabrir serviço
+
+                </button>
+              `
+              : ''
+          }
+
+          <button
+            class="btn-acao btn-excluir"
+            onclick="excluirServicoTela(
+              '${escapar(torre)}',
+              '${pavimento}',
+              '${escapar(nomeServico)}'
+            )">
+
+            🗑️ Excluir serviço
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card observacoes">
+
+        <div class="detalhe-nome">
+
+          📝 Observações (opcional)
+
+        </div>
+
+        <p class="texto-apoio">Registre uma observação somente se houver algum problema neste serviço e pavimento. Sem observações, você pode concluir o serviço normalmente.</p>
+
+        <div id="listaObservacoes">
+
+          <div class="carregando">
+
+            Carregando observações...
+
+          </div>
+
+        </div>
+
+        <div style="margin-top: 12px;">
+
+          <textarea
+            id="novaObservacao"
+            placeholder="Digite uma observação..."></textarea>
+
+          <button
+            class="btn-acao btn-observacao"
+            onclick="salvarObservacao(
+              '${escapar(torre)}',
+              '${pavimento}',
+              '${escapar(nomeServico)}'
+            )">
+
+            ➕ Salvar observação
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div class="detalhe-nome">📷 Fotos do serviço</div>
+        <p>As fotos ficam vinculadas a esta torre, pavimento e serviço.</p>
+        <div class="form-grupo"><label for="fotosServicoUpload">Adicionar fotos</label><input id="fotosServicoUpload" type="file" accept="image/*" capture="environment" multiple></div>
+        <button class="btn-acao btn-observacao" onclick="enviarFotosServico('${escapar(torre)}','${pavimento}','${escapar(nomeServico)}')">📤 Salvar fotos do serviço</button>
+        <div id="listaFotosServico" class="carregando">Carregando fotos...</div>
+      </div>
+
+    `;
+
+    carregarObservacoes(
+      torre,
+      pavimento,
+      nomeServico
+    );
+
+    carregarFotosServico(torre, pavimento, nomeServico);
+
+  }
+
+
+  function reabrirServicoTela(
+    torre,
+    pavimento,
+    nomeServico
+  ) {
+
+    if (
+      !confirm(
+        'Deseja reabrir este serviço? A data de término será apagada e o serviço voltará para Em andamento.'
+      )
+    ) {
+
+      return;
+
+    }
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function() {
+
+          mostrarMensagem(
+            '🔄 Serviço reaberto com sucesso!'
+          );
+
+          abrirServicoComContexto(
+            nomeServico,
+            torre,
+            pavimento,
+            telaAnterior
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .reabrirServico(
+        torre,
+        pavimento,
+        nomeServico
+      );
+
+  }
+
+
+  function excluirServicoTela(
+    torre,
+    pavimento,
+    nomeServico
+  ) {
+
+    if (
+      !confirm(
+        'Deseja excluir este serviço?'
+      )
+    ) {
+
+      return;
+
+    }
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function() {
+
+          mostrarMensagem(
+            '🗑️ Serviço excluído com sucesso!'
+          );
+
+          if (
+            telaAnterior ===
+            'telaHistorico'
+          ) {
+
+            voltarLista();
+
+            return;
+
+          }
+
+          if (
+            telaAnterior ===
+            'telaAcompanhamentoServicos'
+          ) {
+
+            limparCacheAcompanhamentoServico(
+              nomeServico
+            );
+
+            voltarLista();
+
+            return;
+
+          }
+
+          document
+            .getElementById(
+              'detalhesConteudo'
+            )
+            .innerHTML =
+            '<div class="card">Serviço excluído.</div>';
+
+          if (
+            document
+              .getElementById(
+                'telaServicos'
+              )
+              .classList
+              .contains(
+                'oculto'
+              )
+          ) {
+
+            document
+              .getElementById(
+                'telaDetalhes'
+              )
+              .classList.add(
+                'oculto'
+              );
+
+            voltarLista();
+
+          }
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .excluirServico(
+        torre,
+        pavimento,
+        nomeServico
+      );
+
+  }
+
+
+  function solicitarDataEfetiva_(etapa, acao, callback) {
+    const modal = document.getElementById('modalDataFvs');
+    const campo = document.getElementById('dataEfetivaFvs');
+    const inicio = acao === 'inicio';
+
+    document.getElementById('modalDataFvsTitulo').textContent = inicio
+      ? 'Registrar início do serviço/teste'
+      : 'Registrar conclusão do serviço/teste';
+
+    document.getElementById('modalDataFvsLabel').textContent = inicio
+      ? 'Data de início efetiva'
+      : 'Data de conclusão efetiva';
+
+    document.getElementById('modalDataFvsDescricao').textContent = inicio
+      ? 'A data já vem preenchida com hoje. Se precisar escolher outro dia, clique no campo de data para abrir o calendário; se não alterar, basta confirmar. A data roxa de abertura será gravada automaticamente ao salvar e ficará fixa.'
+      : 'Escolha a data efetiva da conclusão. O horário não precisa ser informado e a data roxa de abertura será mantida.';
+
+    campo.value = dataLocalISO();
+    callbackSalvarDataFvs = typeof callback === 'function' ? callback : null;
+    modal.classList.remove('oculto');
+    // Não abrir o calendário automaticamente: a data atual já fica preenchida.
+    // O usuário abre o seletor ao clicar no próprio campo de data.
+  }
+
+  function fecharModalDataFvs() {
+    const modal = document.getElementById('modalDataFvs');
+    if (modal) modal.classList.add('oculto');
+    callbackSalvarDataFvs = null;
+  }
+
+  function confirmarDataEfetivaFvs() {
+    const campo = document.getElementById('dataEfetivaFvs');
+    const valor = campo ? String(campo.value || '').trim() : '';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      mostrarMensagem('⚠️ Selecione uma data válida no calendário.');
+      return;
+    }
+    const callback = callbackSalvarDataFvs;
+    fecharModalDataFvs();
+    if (callback) callback(valor);
+  }
+
+  function registrarServico(
+    torre,
+    pavimento,
+    nomeServico,
+    acao
+  ) {
+
+    function continuarComData() {
+      solicitarDataEfetiva_(
+        acao === 'inicio' ? 'início' : 'conclusão',
+        acao,
+        function(dataEfetiva) {
+          fvsOfflineRun()
+            .withSuccessHandler(function() {
+              mostrarMensagem(
+                acao === 'inicio'
+                  ? '🟢 Serviço iniciado com sucesso!'
+                  : '🔵 Serviço concluído com sucesso!'
+              );
+              abrirServicoComContexto(
+                nomeServico,
+                torre,
+                pavimento,
+                telaAnterior
+              );
+            })
+            .withFailureHandler(mostrarErro)
+            .registrarData(
+              torre,
+              pavimento,
+              nomeServico,
+              acao,
+              dataEfetiva
+            );
+        }
+      );
+    }
+
+    // O alerta é informativo: nunca impede o início do serviço atual.
+    if (acao === 'inicio') {
+      fvsOfflineRun()
+        .withSuccessHandler(function(pavimentosNaoIniciados) {
+          const faltantes = Array.isArray(pavimentosNaoIniciados)
+            ? pavimentosNaoIniciados
+            : [];
+
+          if (faltantes.length) {
+            mostrarMensagem(
+              '⚠️ Atenção: ' + nomeServico +
+              ' não foi iniciado nos pavimentos anteriores: ' +
+              faltantes.map(function(p) { return p + 'º'; }).join(', ') +
+              '. O início neste pavimento continuará normalmente.',
+              'aviso',
+              true
+            );
+          }
+          continuarComData();
+        })
+        .withFailureHandler(function() {
+          // Falha na consulta de sequência não deve bloquear o início do serviço.
+          continuarComData();
+        })
+        .obterPavimentosAnterioresNaoIniciados(
+          torre,
+          pavimento,
+          nomeServico
+        );
+      return;
+    }
+
+    continuarComData();
+  }
+
+
+
+  /* =====================================================
+     TESTES
+     ===================================================== */
+
+  function limparTelaTestes() {
+
+    document
+      .getElementById(
+        'listaTestes'
+      )
+      .innerHTML = '';
+
+  }
+
+
+  function carregarTestes() {
+
+    const torre =
+      document
+        .getElementById(
+          'torreTestes'
+        )
+        .value;
+
+    const pavimento =
+      document
+        .getElementById(
+          'pavimentoTestes'
+        )
+        .value;
+
+    if (
+      !torre ||
+      !pavimento
+    ) {
+
+      mostrarMensagem(
+        '🔴 Selecione a torre e o pavimento.',
+        'erro'
+      );
+
+      return;
+
+    }
+
+    document
+      .getElementById(
+        'listaTestes'
+      )
+      .innerHTML =
+      '<div class="card carregando">Carregando testes...</div>';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          testesAtuais =
+            Array.isArray(dados)
+              ? dados
+              : [];
+
+          filtrarTestes();
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .listarTestesPavimento(
+        torre,
+        pavimento
+      );
+
+  }
+
+
+  function filtrarTestes() {
+
+    const lista =
+      document.getElementById(
+        'listaTestes'
+      );
+
+    if (
+      testesAtuais.length === 0
+    ) {
+
+      lista.innerHTML = `
+        <div class="sem-resultados">
+          Nenhum teste encontrado.
+        </div>
+      `;
+
+      return;
+
+    }
+
+    lista.innerHTML =
+      testesAtuais
+        .map(
+          function(item) {
+
+            const nome =
+              item.nome ||
+              item.item ||
+              '';
+
+            const ciclo =
+              item.ciclo ||
+              '';
+
+            const status =
+              item.status ||
+              '';
+
+            return `
+
+              <div
+                class="item-lista"
+                onclick="abrirTeste(
+                  '${escapar(nome)}'
+                )">
+
+                ${
+                  ciclo
+                    ? `
+                      <div class="servico-acompanhamento-ciclo">
+
+                        ${escapar(ciclo)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="item-lista-nome">
+
+                  🧪 ${escapar(nome)}
+
+                </div>
+
+                ${
+                  status
+                    ? `
+                      <div class="item-lista-info">
+
+                        ${montarStatus(status)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="indicador-observacao ${status === 'Concluído' && item.temObservacaoRegistrada ? 'observacao-resolvida' : (item.temObservacao ? 'com-observacao' : 'sem-observacao')}">
+                  <span class="bolinha"></span>
+                  <span>${status === 'Concluído' && item.temObservacaoRegistrada ? 'Resolvido' : (item.temObservacao ? 'Observação pendente' : 'Sem observações pendentes')}</span>
+                </div>
+
+                <div class="item-lista-rodape">
+
+                  Toque para abrir
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join('');
+
+  }
+
+
+  function abrirTeste(
+    nomeTeste
+  ) {
+
+    const torre =
+      document
+        .getElementById(
+          'torreTestes'
+        )
+        .value;
+
+    const pavimento =
+      document
+        .getElementById(
+          'pavimentoTestes'
+        )
+        .value;
+
+    abrirTesteComContexto(
+      nomeTeste,
+      torre,
+      pavimento,
+      'telaTestes'
+    );
+
+  }
+
+
+  function abrirTesteAcompanhamento(
+    nomeTeste,
+    torre,
+    pavimento
+  ) {
+
+    abrirTesteComContexto(
+      nomeTeste,
+      torre,
+      pavimento,
+      telaAnterior
+    );
+
+  }
+
+
+  function abrirTesteComContexto(
+    nomeTeste,
+    torre,
+    pavimento,
+    origem
+  ) {
+
+    telaAnterior =
+      origem ||
+      'telaTestes';
+
+    esconderTodasTelas();
+
+    document
+      .getElementById(
+        'telaDetalhes'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    const conteudo =
+      document.getElementById(
+        'detalhesConteudo'
+      );
+
+    conteudo.innerHTML = `
+
+      <div class="card">
+
+        <div class="detalhe-header">
+
+          <div class="detalhe-nome">
+
+            🧪 ${escapar(nomeTeste)}
+
+          </div>
+
+          <div class="detalhe-local">
+            🏢 <span class="torre-badge ${normalizarJS(torre).includes('torre a') ? 'torre-a' : normalizarJS(torre).includes('torre b') ? 'torre-b' : normalizarJS(torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre)}</span>
+            — <strong class="pavimento-destaque">${pavimento}º pavimento</strong>
+          </div>
+
+        </div>
+
+        <div class="carregando">
+
+          Carregando...
+
+        </div>
+
+      </div>
+
+    `;
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          mostrarDetalhesTeste(
+            dados,
+            nomeTeste,
+            torre,
+            pavimento
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .consultarTeste(
+        torre,
+        pavimento,
+        nomeTeste
+      );
+
+  }
+
+
+  function mostrarDetalhesTeste(
+    dados,
+    nomeTeste,
+    torre,
+    pavimento
+  ) {
+
+    const conteudo =
+      document.getElementById(
+        'detalhesConteudo'
+      );
+
+    const status =
+      dados &&
+      dados.status
+        ? dados.status
+        : 'Não iniciado';
+
+    const dataAbertura =
+      dados &&
+      dados.dataAbertura
+        ? dados.dataAbertura
+        : 'Não informado';
+
+    const inicio =
+      dados &&
+      dados.inicio
+        ? dados.inicio
+        : 'Não informado';
+
+    const termino =
+      dados &&
+      dados.termino
+        ? dados.termino
+        : 'Não informado';
+
+    const ciclo =
+      dados &&
+      dados.ciclo
+        ? dados.ciclo
+        : '';
+
+    const nomeOriginal =
+      dados &&
+      dados.item
+        ? dados.item
+        : (
+            dados &&
+            dados.nomeOriginal
+              ? dados.nomeOriginal
+              : nomeTeste
+          );
+
+    conteudo.innerHTML = `
+
+      <div class="card">
+
+        <div class="detalhe-header">
+
+          <div class="detalhe-nome">
+
+            🧪 ${escapar(nomeTeste)}
+
+          </div>
+
+          ${
+            ciclo
+              ? `
+                <div class="servico-acompanhamento-ciclo">
+
+                  ${escapar(ciclo)}
+
+                </div>
+              `
+              : ''
+          }
+
+          <div class="detalhe-local">
+            🏢 <span class="torre-badge ${normalizarJS(torre).includes('torre a') ? 'torre-a' : normalizarJS(torre).includes('torre b') ? 'torre-b' : normalizarJS(torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre)}</span>
+            — <strong class="pavimento-destaque">${pavimento}º pavimento</strong>
+          </div>
+
+        </div>
+
+        <div class="detalhe-status">
+
+          ${montarStatus(status)}
+
+        </div>
+
+        <div class="detalhe-datas">
+
+          🟣 Abertura:
+          <strong>
+            ${escapar(dataAbertura)}
+          </strong>
+
+          <br>
+
+          🟢 Início:
+          <strong>
+            ${escapar(inicio)}
+          </strong>
+
+          <br>
+
+          🔵 Término:
+          <strong>
+            ${escapar(termino)}
+          </strong>
+
+        </div>
+
+        ${status === 'Não iniciado' ? `
+          <div class="campo-teste-complementar">
+            <label for="observacaoInicioTeste">Observação do teste (opcional)</label>
+            <textarea id="observacaoInicioTeste" rows="3" placeholder="Descreva o problema e onde ocorreu, se houver">${escapar(dados.observacao || '')}</textarea>
+          </div>
+          ${normalizarJS(nomeTeste) === normalizarJS('Teste de Estanqueidade') ? `
+            <div class="campo-teste-complementar">
+              <label for="pressaoTeste">Pressão no momento do teste (bar)</label>
+              <input id="pressaoTeste" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex.: 3,5" value="${escapar(String(dados.pressao || '').replace('.', ','))}">
+            </div>
+          ` : ''}
+        ` : `
+          ${dados.observacao ? `<div class="registro-observacao-teste ${dados.statusObservacao === 'Corrigida' ? 'corrigida' : ''}"><strong>Observação:</strong><br>${escapar(dados.observacao)}<br><strong>Status:</strong> ${escapar(dados.statusObservacao || 'Pendente')}
+            ${dados.statusObservacao !== 'Corrigida' ? `<div style="margin-top:10px"><button class="btn-acao btn-concluir" onclick="marcarObservacaoTesteCorrigida('${escapar(torre)}','${pavimento}','${escapar(nomeTeste)}')">✅ OK — problema corrigido</button></div>` : ''}
+          </div>` : ''}
+          ${normalizarJS(nomeTeste) === normalizarJS('Teste de Estanqueidade') && dados.pressao ? `<div class="linha-geral">📏 Pressão registrada: <strong>${escapar(String(dados.pressao).replace('.', ','))} bar</strong></div>` : ''}
+        `}
+
+        <div>
+
+          ${
+            status === 'Não iniciado'
+              ? `
+                <button
+                  class="btn-acao btn-iniciar"
+                  onclick="registrarTeste(
+                    '${escapar(torre)}',
+                    '${pavimento}',
+                    '${escapar(nomeTeste)}',
+                    'inicio'
+                  )">
+
+                  🟢 Iniciar teste
+
+                </button>
+              `
+              : ''
+          }
+
+          ${
+            status === 'Em andamento'
+              ? `
+                <button
+                  class="btn-acao btn-concluir"
+                  onclick="registrarTeste(
+                    '${escapar(torre)}',
+                    '${pavimento}',
+                    '${escapar(nomeTeste)}',
+                    'termino'
+                  )">
+
+                  🔵 Concluir teste
+
+                </button>
+              `
+              : ''
+          }
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="detalhe-nome">
+
+          🧪 Teste
+
+        </div>
+
+        <div class="linha-geral">
+
+          O acompanhamento físico deste teste é
+          controlado por suas respectivas
+          medições na FVS.
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  function registrarTeste(
+    torre,
+    pavimento,
+    nomeTeste,
+    acao
+  ) {
+
+    if (acao === 'termino') {
+      const observacaoAtual = document.querySelector('.registro-observacao-teste');
+      const statusObs = observacaoAtual ? observacaoAtual.innerText : '';
+      if (statusObs.includes('Status: Pendente')) {
+        mostrarMensagem('⚠️ Marque “OK — problema corrigido” neste teste antes de concluir.', 'aviso', true);
+        return;
+      }
+    }
+
+    solicitarDataEfetiva_(
+      acao === 'inicio' ? 'início' : 'conclusão',
+      acao,
+      function(dataEfetiva) {
+        fvsOfflineRun()
+          .withSuccessHandler(function() {
+            mostrarMensagem(
+              acao === 'inicio'
+                ? '🟢 Teste iniciado com sucesso!'
+                : '🔵 Teste concluído com sucesso!'
+            );
+            abrirTesteComContexto(
+              nomeTeste,
+              torre,
+              pavimento,
+              telaAnterior
+            );
+          })
+          .withFailureHandler(mostrarErro)
+          .registrarTeste(
+            torre,
+            pavimento,
+            nomeTeste,
+            acao,
+            acao === 'inicio' && document.getElementById('observacaoInicioTeste')
+              ? document.getElementById('observacaoInicioTeste').value
+              : '',
+            acao === 'inicio' && document.getElementById('pressaoTeste')
+              ? document.getElementById('pressaoTeste').value
+              : '',
+            dataEfetiva
+          );
+      }
+    );
+  }
+
+
+
+  function descobrirTesteLogico(
+    nomeOriginal
+  ) {
+
+    const nomeNormalizado =
+      normalizarJS(
+        nomeOriginal
+      );
+
+    const testes = [
+
+      {
+        nome: 'Teste de Estanqueidade',
+        itens: [
+          'Testes Hidráulicos'
+        ]
+      },
+
+      {
+        nome: 'Teste de Esgoto',
+        itens: [
+          'Testes de Esgoto'
+        ]
+      },
+
+      {
+        nome: 'Teste de Impermeabilização',
+        itens: [
+          'Teste Impermeabilização'
+        ]
+      },
+
+      {
+        nome: 'Teste de Elétrica',
+        itens: [
+          'Teste Elétrica (Continuidade)',
+          'Elétrica: Teste Interruptores e Tomadas'
+        ]
+      },
+
+      {
+        nome: 'Teste de Gás',
+        itens: [
+          'Teste de Gás'
+        ]
+      }
+
+    ];
+
+    for (
+      let i = 0;
+      i < testes.length;
+      i++
+    ) {
+
+      for (
+        let j = 0;
+        j < testes[i].itens.length;
+        j++
+      ) {
+
+        if (
+          normalizarJS(
+            testes[i].itens[j]
+          ) ===
+          nomeNormalizado
+        ) {
+
+          return testes[i].nome;
+        }
+
+      }
+
+    }
+
+    return nomeOriginal;
+  }
+
+
+  /* =====================================================
+     ACOMPANHAMENTO DE TESTES
+     ===================================================== */
+
+  function carregarAcompanhamento() {
+
+    const nome =
+      document
+        .getElementById(
+          'testeAcompanhamento'
+        )
+        .value;
+
+    if (!nome) {
+
+      document
+        .getElementById(
+          'resultadoAcompanhamento'
+        )
+        .innerHTML = '';
+
+      return;
+    }
+
+    document
+      .getElementById(
+        'resultadoAcompanhamento'
+      )
+      .innerHTML =
+      '<div class="carregando">Carregando...</div>';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          mostrarAcompanhamento(
+            dados
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .acompanhamentoTeste(
+        nome
+      );
+  }
+
+
+  function temObservacaoTesteNoPavimento(torre, pavimento) {
+    const registros = Array.isArray(torre.registrosObservacao)
+      ? torre.registrosObservacao
+      : [];
+    return registros.some(function(registro) {
+      return String(registro.pavimento) === String(pavimento) &&
+        String(registro.observacao || '').trim() !== '';
+    });
+  }
+
+
+  function mostrarAcompanhamento(
+    dados
+  ) {
+
+    let html = '';
+
+    const nomeTeste =
+      functionNomeTesteAcompanhamento();
+
+    dados.forEach(
+      function(torre) {
+
+        html += `
+
+          <div class="torre-geral">
+
+            <div class="torre-titulo">
+
+              🏢 <span class="torre-badge ${normalizarJS(torre.torre).includes('torre a') ? 'torre-a' : normalizarJS(torre.torre).includes('torre b') ? 'torre-b' : normalizarJS(torre.torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre.torre)}</span>
+
+            </div>
+
+        `;
+
+        if (torre.ciclo) {
+
+          html += `
+
+            <div class="ciclo-acompanhamento">
+
+              ${escapar(
+                torre.ciclo
+              )}
+
+            </div>
+
+            <div class="nome-acompanhamento">
+
+              🧪 ${escapar(
+                nomeTeste
+              )}
+
+            </div>
+
+          `;
+
+        }
+
+        const pendencias =
+          Array.isArray(
+            torre.pendencias
+          )
+            ? torre.pendencias
+            : [];
+
+        if (
+          pendencias.length > 0
+        ) {
+
+          pendencias.forEach(
+            function(pavimento) {
+
+              html +=
+                montarPavimentoClicavel(
+                  pavimento,
+                  'pendencia',
+                  nomeTeste,
+                  torre.torre
+                );
+
+            }
+          );
+
+        } else {
+
+          html += `
+
+            <div class="linha-geral">
+
+              🔴 Pendências:
+
+              <strong>
+                Nenhuma
+              </strong>
+
+            </div>
+
+          `;
+
+        }
+
+        if (
+          torre.ultimoConcluido
+        ) {
+
+          html +=
+            montarPavimentoClicavel(
+              torre.ultimoConcluido,
+              'concluido',
+              nomeTeste,
+              torre.torre,
+              temObservacaoTesteNoPavimento(torre, torre.ultimoConcluido)
+            );
+
+        } else {
+
+          html += `
+
+            <div class="linha-geral">
+
+              🟢 Último concluído:
+
+              <strong>
+                Nenhum
+              </strong>
+
+            </div>
+
+          `;
+
+        }
+
+        const emAndamento =
+          Array.isArray(
+            torre.emAndamento
+          )
+            ? torre.emAndamento
+            : (
+                torre.emAndamento
+                  ? [torre.emAndamento]
+                  : []
+              );
+
+        if (
+          emAndamento.length > 0
+        ) {
+
+          emAndamento.forEach(
+            function(pavimento) {
+
+              html +=
+                montarPavimentoClicavel(
+                  pavimento,
+                  'andamento',
+                  nomeTeste,
+                  torre.torre,
+                  temObservacaoTesteNoPavimento(torre, pavimento)
+                );
+
+            }
+          );
+
+        } else {
+
+          html += `
+
+            <div class="linha-geral">
+
+              🟡 Em andamento:
+
+              <strong>
+                Nenhum
+              </strong>
+
+            </div>
+
+          `;
+
+        }
+
+        html += `
+
+          </div>
+
+        `;
+
+      }
+    );
+
+    document
+      .getElementById(
+        'resultadoAcompanhamento'
+      )
+      .innerHTML =
+      html;
+  }
+
+
+  function marcarObservacaoTesteCorrigida(torre, pavimento, nomeTeste) {
+    if (!confirm('Confirma que o problema registrado neste teste foi corrigido?')) return;
+    fvsOfflineRun().withSuccessHandler(function() {
+      mostrarMensagem('✅ Observação marcada como corrigida.');
+      abrirTesteComContexto(nomeTeste, torre, pavimento, telaAnterior);
+    }).withFailureHandler(mostrarErro).marcarObservacaoTesteCorrigida(torre, pavimento, nomeTeste);
+  }
+
+
+  function functionNomeTesteAcompanhamento() {
+
+    return document
+      .getElementById(
+        'testeAcompanhamento'
+      )
+      .value;
+  }
+
+
+  /* =====================================================
+     ACOMPANHAMENTO DE SERVIÇOS
+     ===================================================== */
+
+  function carregarListaServicosAcompanhamento() {
+
+    // Ao reabrir a tela, não reutiliza acompanhamento antigo ou uma resposta vazia.
+    cacheAcompanhamentoServicos = {};
+
+    const busca =
+      document.getElementById(
+        'buscaServicoAcompanhamento'
+      );
+
+    if (busca) {
+
+      busca.value = '';
+
+    }
+
+    document
+      .getElementById(
+        'listaServicosAcompanhamento'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    document
+      .getElementById(
+        'listaServicosAcompanhamento'
+      )
+      .innerHTML =
+      '<div class="carregando">Carregando serviços...</div>';
+
+    document
+      .getElementById(
+        'resultadoAcompanhamentoServicos'
+      )
+      .innerHTML = '';
+
+    document
+      .getElementById(
+        'contadorServicosAcompanhamento'
+      )
+      .textContent = '';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(servicos) {
+
+          servicosAcompanhamentoAtuais =
+            servicos || [];
+
+          if (
+            servicosAcompanhamentoAtuais.length === 0
+          ) {
+
+            document
+              .getElementById(
+                'listaServicosAcompanhamento'
+              )
+              .innerHTML =
+              '<div class="card">Nenhum serviço encontrado nas torres.</div>';
+
+            return;
+          }
+
+          filtrarServicosAcompanhamento();
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .listarServicosAcompanhamento();
+  }
+
+
+  function filtrarServicosAcompanhamento() {
+
+    const campo =
+      document.getElementById(
+        'buscaServicoAcompanhamento'
+      );
+
+    const lista =
+      document.getElementById(
+        'listaServicosAcompanhamento'
+      );
+
+    const contador =
+      document.getElementById(
+        'contadorServicosAcompanhamento'
+      );
+
+    if (
+      !campo ||
+      !lista
+    ) {
+
+      return;
+    }
+
+    const busca =
+      normalizarJS(
+        campo.value
+      );
+
+    const filtrados =
+      servicosAcompanhamentoAtuais.filter(
+        function(servico) {
+
+          return normalizarJS(
+            servico
+          ).includes(
+            busca
+          );
+
+        }
+      );
+
+    if (contador) {
+
+      contador.textContent =
+        `${filtrados.length} serviço(s) encontrado(s)`;
+
+    }
+
+    if (
+      filtrados.length === 0
+    ) {
+
+      lista.innerHTML = `
+
+        <div class="card">
+
+          Nenhum serviço encontrado.
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+    lista.innerHTML =
+      filtrados
+        .map(
+          function(servico) {
+
+            const cache =
+              cacheAcompanhamentoServicos[
+                servico
+              ];
+
+            const ciclo =
+              obterCicloCache(
+                cache
+              );
+
+            return `
+
+              <div
+                class="servico-acompanhamento-card"
+                onclick="selecionarServicoAcompanhamento(
+                  '${escapar(servico)}'
+                )">
+
+                ${
+                  ciclo
+                    ? `
+                      <div class="servico-acompanhamento-ciclo">
+
+                        ${escapar(ciclo)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="servico-acompanhamento-nome">
+
+                  🔧 ${escapar(
+                    servico
+                  )}
+
+                </div>
+
+                <div class="servico-acompanhamento-rodape">
+
+                  <span>
+                    Toque para acompanhar
+                  </span>
+
+                  <span class="servico-acompanhamento-seta">
+                    →
+                  </span>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join('');
+
+    carregarCiclosDosCards(
+      filtrados
+    );
+  }
+
+
+  function carregarCiclosDosCards(
+    servicos
+  ) {
+
+    const pendentes =
+      servicos.filter(
+        function(servico) {
+
+          return !cacheAcompanhamentoServicos[
+            servico
+          ];
+
+        }
+      );
+
+    if (
+      pendentes.length === 0
+    ) {
+
+      return;
+    }
+
+    let indice = 0;
+
+    function proximo() {
+
+      if (
+        indice >= pendentes.length
+      ) {
+
+        filtrarCardsSemNovaBusca();
+
+        return;
+      }
+
+      const servico =
+        pendentes[indice];
+
+      indice++;
+
+      fvsOfflineRun()
+
+        .withSuccessHandler(
+          function(dados) {
+
+            cacheAcompanhamentoServicos[
+              servico
+            ] = dados || [];
+
+            proximo();
+
+          }
+        )
+
+        .withFailureHandler(
+          function() {
+
+            cacheAcompanhamentoServicos[
+              servico
+            ] = [];
+
+            proximo();
+
+          }
+        )
+
+        .acompanhamentoServico(
+          servico
+        );
+    }
+
+    proximo();
+  }
+
+
+  function filtrarCardsSemNovaBusca() {
+
+    const campo =
+      document.getElementById(
+        'buscaServicoAcompanhamento'
+      );
+
+    const lista =
+      document.getElementById(
+        'listaServicosAcompanhamento'
+      );
+
+    const contador =
+      document.getElementById(
+        'contadorServicosAcompanhamento'
+      );
+
+    if (
+      !campo ||
+      !lista
+    ) {
+
+      return;
+    }
+
+    const busca =
+      normalizarJS(
+        campo.value
+      );
+
+    const filtrados =
+      servicosAcompanhamentoAtuais.filter(
+        function(servico) {
+
+          return normalizarJS(
+            servico
+          ).includes(
+            busca
+          );
+
+        }
+      );
+
+    if (contador) {
+
+      contador.textContent =
+        `${filtrados.length} serviço(s) encontrado(s)`;
+
+    }
+
+    lista.innerHTML =
+      filtrados
+        .map(
+          function(servico) {
+
+            const cache =
+              cacheAcompanhamentoServicos[
+                servico
+              ];
+
+            const ciclo =
+              obterCicloCache(
+                cache
+              );
+
+            return `
+
+              <div
+                class="servico-acompanhamento-card"
+                onclick="selecionarServicoAcompanhamento(
+                  '${escapar(servico)}'
+                )">
+
+                ${
+                  ciclo
+                    ? `
+                      <div class="servico-acompanhamento-ciclo">
+
+                        ${escapar(ciclo)}
+
+                      </div>
+                    `
+                    : ''
+                }
+
+                <div class="servico-acompanhamento-nome">
+
+                  🔧 ${escapar(
+                    servico
+                  )}
+
+                </div>
+
+                <div class="servico-acompanhamento-rodape">
+
+                  <span>
+                    Toque para acompanhar
+                  </span>
+
+                  <span class="servico-acompanhamento-seta">
+                    →
+                  </span>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join('');
+  }
+
+
+  function obterCicloCache(
+    dados
+  ) {
+
+    if (
+      !Array.isArray(dados)
+    ) {
+
+      return '';
+
+    }
+
+    for (
+      let i = 0;
+      i < dados.length;
+      i++
+    ) {
+
+      if (
+        dados[i] &&
+        dados[i].ciclo
+      ) {
+
+        return String(
+          dados[i].ciclo
+        );
+
+      }
+
+    }
+
+    return '';
+  }
+
+
+  function selecionarServicoAcompanhamento(
+    nomeServico,
+    tentativa
+  ) {
+
+    tentativa = Number(tentativa || 0);
+
+    document
+      .getElementById(
+        'listaServicosAcompanhamento'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+    const resultado =
+      document.getElementById(
+        'resultadoAcompanhamentoServicos'
+      );
+
+    resultado.innerHTML = `
+
+      <div class="card">
+
+        <button
+          class="btn-voltar-servicos-acompanhamento"
+          onclick="voltarListaServicosAcompanhamento()">
+
+          ← Voltar para serviços
+
+        </button>
+
+        <div class="servico-acompanhamento-nome">
+
+          🔧 ${escapar(nomeServico)}
+
+        </div>
+
+        <div class="carregando">
+
+          Carregando acompanhamento...
+
+        </div>
+
+      </div>
+
+    `;
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+    const dadosEmCache =
+      cacheAcompanhamentoServicos[nomeServico];
+
+    if (
+      Array.isArray(dadosEmCache) &&
+      dadosEmCache.length > 0
+    ) {
+
+      mostrarAcompanhamentoServico(
+        dadosEmCache,
+        nomeServico
+      );
+
+      return;
+    }
+
+    // Resposta vazia nunca deve ficar guardada como cache válido.
+    delete cacheAcompanhamentoServicos[nomeServico];
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          const dadosValidos =
+            Array.isArray(dados) ? dados : [];
+
+          if (dadosValidos.length > 0) {
+            cacheAcompanhamentoServicos[nomeServico] = dadosValidos;
+            mostrarAcompanhamentoServico(
+              dadosValidos,
+              nomeServico
+            );
+            return;
+          }
+
+          // Se a primeira resposta vier vazia inesperadamente, tenta uma vez
+          // novamente antes de exibir "Nenhum dado encontrado".
+          delete cacheAcompanhamentoServicos[nomeServico];
+
+          if (tentativa < 1) {
+            selecionarServicoAcompanhamento(nomeServico, tentativa + 1);
+            return;
+          }
+
+          mostrarAcompanhamentoServico(
+            dadosValidos,
+            nomeServico
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .acompanhamentoServico(
+        nomeServico
+      );
+  }
+
+
+  function voltarListaServicosAcompanhamento() {
+
+    document
+      .getElementById(
+        'resultadoAcompanhamentoServicos'
+      )
+      .innerHTML = '';
+
+    document
+      .getElementById(
+        'listaServicosAcompanhamento'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+  }
+
+
+  function carregarAcompanhamentoServico() {
+
+    const select =
+      document.getElementById(
+        'servicoAcompanhamento'
+      );
+
+    if (
+      select &&
+      select.value
+    ) {
+
+      selecionarServicoAcompanhamento(
+        select.value
+      );
+
+    }
+
+  }
+
+
+  function mostrarAcompanhamentoServico(
+    dados,
+    nomeServico
+  ) {
+
+    const resultado =
+      document.getElementById(
+        'resultadoAcompanhamentoServicos'
+      );
+
+    if (
+      !dados ||
+      dados.length === 0
+    ) {
+
+      resultado.innerHTML = `
+
+        <div class="card">
+
+          <button
+            class="btn-voltar-servicos-acompanhamento"
+            onclick="voltarListaServicosAcompanhamento()">
+
+            ← Voltar para serviços
+
+          </button>
+
+          <div class="servico-acompanhamento-nome">
+
+            🔧 ${escapar(nomeServico)}
+
+          </div>
+
+          <div class="linha-geral">
+
+            Nenhum dado encontrado.
+
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+    cacheAcompanhamentoServicos[
+      nomeServico
+    ] = dados;
+
+    let html = '';
+
+    const ciclo =
+      obterCicloCache(
+        dados
+      );
+
+    html += `
+
+      <div class="card">
+
+        <button
+          class="btn-voltar-servicos-acompanhamento"
+          onclick="voltarListaServicosAcompanhamento()">
+
+          ← Voltar para serviços
+
+        </button>
+
+        ${
+          ciclo
+            ? `
+              <div class="servico-acompanhamento-ciclo">
+
+                ${escapar(ciclo)}
+
+              </div>
+            `
+            : ''
+        }
+
+        <div class="servico-acompanhamento-nome">
+
+          🔧 ${escapar(nomeServico)}
+
+        </div>
+
+        <div class="subtitulo-acompanhamento">
+
+          Visão geral do andamento deste serviço
+          nas torres.
+
+        </div>
+
+        ${montarResumoAcompanhamentoServico(
+          dados
+        )}
+
+      </div>
+
+    `;
+
+    dados.forEach(
+      function(torre) {
+
+        const temServico =
+          torre.pavimentos &&
+          torre.pavimentos.length > 0;
+
+        html += `
+
+          <div class="torre-geral">
+
+            <div class="torre-titulo">
+
+              🏢 <span class="torre-badge ${normalizarJS(torre.torre).includes('torre a') ? 'torre-a' : normalizarJS(torre.torre).includes('torre b') ? 'torre-b' : normalizarJS(torre.torre).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torre.torre)}</span>
+
+            </div>
+
+        `;
+
+        if (!temServico) {
+
+          html += `
+
+            <div class="linha-geral">
+
+              ⚪ Serviço não encontrado
+              nesta torre.
+
+            </div>
+
+          `;
+
+        } else {
+
+          if (torre.ciclo) {
+
+            html += `
+
+              <div class="ciclo-acompanhamento">
+
+                ${escapar(
+                  torre.ciclo
+                )}
+
+              </div>
+
+              <div class="nome-acompanhamento">
+
+                🔧 ${escapar(
+                  nomeServico
+                )}
+
+              </div>
+
+            `;
+
+          }
+
+          const pendencias =
+            Array.isArray(
+              torre.pendencias
+            )
+              ? torre.pendencias
+              : [];
+
+          if (
+            pendencias.length > 0
+          ) {
+
+            html += `
+
+              <div class="acompanhamento-torre-secao">
+
+                <div class="acompanhamento-torre-secao-titulo">
+
+                  🔴 Pendências
+
+                </div>
+
+            `;
+
+            pendencias.forEach(
+              function(pavimento) {
+
+                html +=
+                  montarPavimentoClicavel(
+                    pavimento,
+                    'pendencia',
+                    nomeServico,
+                    torre.torre,
+                    Array.isArray(torre.pavimentosComObservacao) && torre.pavimentosComObservacao.indexOf(Number(pavimento)) !== -1
+                  );
+
+              }
+            );
+
+            html += `
+
+              </div>
+
+            `;
+
+          } else {
+
+            html += `
+
+              <div class="linha-geral">
+
+                🔴 Pendências:
+
+                <strong>
+                  Nenhuma
+                </strong>
+
+              </div>
+
+            `;
+
+          }
+
+          if (
+            torre.ultimoConcluido
+          ) {
+
+            html += `
+
+              <div class="acompanhamento-torre-secao">
+
+                <div class="acompanhamento-torre-secao-titulo">
+
+                  🟢 Último concluído
+
+                </div>
+
+            `;
+
+            html +=
+              montarPavimentoClicavel(
+                torre.ultimoConcluido,
+                'concluido',
+                nomeServico,
+                torre.torre,
+                Array.isArray(torre.pavimentosComObservacao) && torre.pavimentosComObservacao.indexOf(Number(torre.ultimoConcluido)) !== -1
+              );
+
+            html += `
+
+              </div>
+
+            `;
+
+          } else {
+
+            html += `
+
+              <div class="linha-geral">
+
+                🟢 Último concluído:
+
+                <strong>
+                  Nenhum
+                </strong>
+
+              </div>
+
+            `;
+
+          }
+
+          const emAndamento =
+            Array.isArray(
+              torre.emAndamento
+            )
+              ? torre.emAndamento
+              : (
+                  torre.emAndamento
+                    ? [torre.emAndamento]
+                    : []
+                );
+
+          if (
+            emAndamento.length > 0
+          ) {
+
+            html += `
+
+              <div class="acompanhamento-torre-secao">
+
+                <div class="acompanhamento-torre-secao-titulo">
+
+                  🟡 Em andamento
+
+                </div>
+
+            `;
+
+            emAndamento.forEach(
+              function(pavimento) {
+
+                html +=
+                  montarPavimentoClicavel(
+                    pavimento,
+                    'andamento',
+                    nomeServico,
+                    torre.torre,
+                    Array.isArray(torre.pavimentosComObservacao) && torre.pavimentosComObservacao.indexOf(Number(pavimento)) !== -1
+                  );
+
+              }
+            );
+
+            html += `
+
+              </div>
+
+            `;
+
+          } else {
+
+            html += `
+
+              <div class="linha-geral">
+
+                🟡 Em andamento:
+
+                <strong>
+                  Nenhum
+                </strong>
+
+              </div>
+
+            `;
+
+          }
+
+        }
+
+        html += `
+
+          </div>
+
+        `;
+
+      }
+    );
+
+    resultado.innerHTML =
+      html;
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+
+  function montarResumoAcompanhamentoServico(
+    dados
+  ) {
+
+    let html = `
+
+      <div class="resumo-acompanhamento">
+
+        <div class="resumo-titulo">
+
+          📋 Resumo por torre
+
+        </div>
+
+        <div class="resumo-linha resumo-cabecalho">
+
+          <div>Torre</div>
+          <div>Concluído</div>
+          <div>Andamento</div>
+          <div>Pendências</div>
+
+        </div>
+
+    `;
+
+    dados.forEach(
+      function(torre) {
+
+        const pendencias =
+          Array.isArray(
+            torre.pendencias
+          )
+            ? torre.pendencias
+            : [];
+
+        const andamento =
+          Array.isArray(
+            torre.emAndamento
+          )
+            ? torre.emAndamento
+            : (
+                torre.emAndamento
+                  ? [torre.emAndamento]
+                  : []
+              );
+
+        const ultimo =
+          torre.ultimoConcluido
+            ? torre.ultimoConcluido + 'º'
+            : '-';
+
+        const andamentoTexto =
+          andamento.length > 0
+            ? andamento
+                .map(
+                  function(p) {
+                    return p + 'º';
+                  }
+                )
+                .join(', ')
+            : '-';
+
+        const pendenciasTexto =
+          pendencias.length > 0
+            ? pendencias.length
+            : '0';
+
+        html += `
+
+          <div class="resumo-linha">
+
+            <div>
+              <strong>
+                ${escapar(
+                  torre.torre
+                )}
+              </strong>
+            </div>
+
+            <div class="resumo-concluido">
+
+              ${ultimo}
+
+            </div>
+
+            <div class="resumo-andamento">
+
+              ${andamentoTexto}
+
+            </div>
+
+            <div class="resumo-pendencia">
+
+              ${pendenciasTexto}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+    html += `
+
+      </div>
+
+    `;
+
+    return html;
+  }
+
+
+  function limparCacheAcompanhamentoServico(
+    nomeServico
+  ) {
+
+    if (
+      nomeServico
+    ) {
+
+      delete cacheAcompanhamentoServicos[
+        nomeServico
+      ];
+
+    }
+
+  }
+
+
+  /* =====================================================
+     ACOMPANHAMENTO POR TORRE
+     OTIMIZADO
+     ===================================================== */
+
+  function carregarAcompanhamentoTorre() {
+
+    if (
+      carregamentoTorreEmAndamento
+    ) {
+
+      return;
+
+    }
+
+    const torreSelecionada =
+      document
+        .getElementById(
+          'torreAcompanhamento'
+        )
+        .value;
+
+    if (
+      !torreSelecionada
+    ) {
+
+      document
+        .getElementById(
+          'resultadoAcompanhamentoTorre'
+        )
+        .innerHTML = '';
+
+      return;
+
+    }
+
+    const resultado =
+      document.getElementById(
+        'resultadoAcompanhamentoTorre'
+      );
+
+    resultado.innerHTML = `
+
+      <div class="card">
+
+        <div class="carregando">
+
+          Carregando serviços da
+          ${escapar(torreSelecionada)}...
+
+        </div>
+
+      </div>
+
+    `;
+
+    carregamentoTorreEmAndamento =
+      true;
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(servicos) {
+
+          carregamentoTorreEmAndamento =
+            false;
+
+          mostrarAcompanhamentoPorTorre(
+            torreSelecionada,
+            Array.isArray(servicos)
+              ? servicos
+              : []
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        function(erro) {
+
+          carregamentoTorreEmAndamento =
+            false;
+
+          mostrarErro(
+            erro
+          );
+
+        }
+      )
+
+      .acompanhamentoServicosPorTorre(
+        torreSelecionada
+      );
+
+  }
+
+
+  function mostrarAcompanhamentoPorTorre(
+    torreSelecionada,
+    resultados
+  ) {
+
+    const resultado =
+      document.getElementById(
+        'resultadoAcompanhamentoTorre'
+      );
+
+    if (
+      !Array.isArray(resultados) ||
+      resultados.length === 0
+    ) {
+
+      resultado.innerHTML = `
+
+        <div class="card">
+
+          <div class="torre-titulo">
+
+            🏢 <span class="torre-badge ${normalizarJS(torreSelecionada).includes('torre a') ? 'torre-a' : normalizarJS(torreSelecionada).includes('torre b') ? 'torre-b' : normalizarJS(torreSelecionada).includes('torre c') ? 'torre-c' : 'torre-d'}">${escapar(torreSelecionada)}</span>
+
+          </div>
+
+          <div class="linha-geral">
+
+            Nenhum serviço com acompanhamento
+            encontrado nesta torre.
+
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+    resultados.sort(
+      function(a, b) {
+
+        return String(
+          a.nome || ''
+        ).localeCompare(
+          String(
+            b.nome || ''
+          )
+        );
+
+      }
+    );
+
+    let html = `
+
+      <div class="card">
+
+        <div class="torre-titulo">
+
+          🏢 ${escapar(
+            torreSelecionada
+          )}
+
+        </div>
+
+        <div class="subtitulo-acompanhamento">
+
+          ${resultados.length}
+          serviço(s) encontrado(s).
+
+        </div>
+
+      </div>
+
+    `;
+
+    resultados.forEach(
+      function(item) {
+
+        const torre =
+          item.dados || {};
+
+        const pendencias =
+          Array.isArray(
+            torre.pendencias
+          )
+            ? torre.pendencias
+            : [];
+
+        const andamento =
+          Array.isArray(
+            torre.emAndamento
+          )
+            ? torre.emAndamento
+            : (
+                torre.emAndamento
+                  ? [torre.emAndamento]
+                  : []
+              );
+
+        const ultimo =
+          torre.ultimoConcluido
+            ? torre.ultimoConcluido +
+              'º pavimento'
+            : 'Nenhum';
+
+        const andamentoTexto =
+          andamento.length > 0
+            ? andamento
+                .map(
+                  function(p) {
+
+                    return (
+                      p +
+                      'º'
+                    );
+
+                  }
+                )
+                .join(', ')
+            : 'Nenhum';
+
+        html += `
+
+          <div class="servico-torre-card">
+
+            ${
+              torre.ciclo
+                ? `
+                  <div class="servico-torre-ciclo">
+
+                    ${escapar(
+                      torre.ciclo
+                    )}
+
+                  </div>
+                `
+                : ''
+            }
+
+            <div class="servico-torre-cabecalho">
+
+              <div class="servico-torre-nome">
+
+                🔧 ${escapar(
+                  item.nome
+                )}
+
+              </div>
+
+              ${
+                pendencias.length > 0
+                  ? `
+                    <span class="contador-pendencias-torre">
+
+                      🔴 ${pendencias.length}
+
+                    </span>
+                  `
+                  : ''
+              }
+
+            </div>
+
+            <div class="servico-torre-linha">
+
+              🟢 <strong>
+                Último concluído:
+              </strong>
+
+              ${ultimo}
+
+            </div>
+
+            <div class="servico-torre-linha">
+
+              🟡 <strong>
+                Em andamento:
+              </strong>
+
+              ${andamentoTexto}
+
+            </div>
+
+            <div class="servico-torre-linha">
+
+              🔴 <strong>
+                Pendências:
+              </strong>
+
+              ${
+                pendencias.length > 0
+                  ? pendencias
+                      .map(
+                        function(p) {
+
+                          return (
+                            p +
+                            'º'
+                          );
+
+                        }
+                      )
+                      .join(', ')
+                  : 'Nenhuma'
+              }
+
+            </div>
+
+            <button
+              class="servico-torre-link"
+              onclick="abrirServicoAcompanhamentoPorTorre(
+                '${escapar(item.nome)}',
+                '${escapar(torreSelecionada)}'
+              )">
+
+              📈 Ver acompanhamento detalhado
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+    resultado.innerHTML =
+      html;
+
+  }
+
+
+  function abrirServicoAcompanhamentoPorTorre(
+    nomeServico,
+    torre
+  ) {
+
+    esconderTodasTelas();
+
+    document
+      .getElementById(
+        'telaAcompanhamentoServicos'
+      )
+      .classList.remove(
+        'oculto'
+      );
+
+    document
+      .getElementById(
+        'listaServicosAcompanhamento'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+    selecionarServicoAcompanhamento(
+      nomeServico
+    );
+
+  }
+
+
+  /* =====================================================
+     OBSERVAÇÕES
+     ===================================================== */
+
+  function carregarObservacoes(
+    torre,
+    pavimento,
+    nomeServico
+  ) {
+
+    window.__contextoObservacoes = {
+      torre: torre,
+      pavimento: pavimento,
+      servico: nomeServico
+    };
+
+    const elemento =
+      document.getElementById(
+        'listaObservacoes'
+      );
+
+    if (!elemento) {
+
+      return;
+
+    }
+
+    elemento.innerHTML =
+      '<div class="carregando">Carregando observações...</div>';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          mostrarObservacoes(
+            dados || [],
+            torre,
+            pavimento,
+            nomeServico
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .listarObservacoes(
+        torre,
+        pavimento,
+        nomeServico
+      );
+
+  }
+
+
+  function mostrarObservacoes(
+    dados,
+    torre,
+    pavimento,
+    nomeServico
+  ) {
+    const elemento = document.getElementById('listaObservacoes');
+    if (!elemento) return;
+
+    if (!Array.isArray(dados) || dados.length === 0) {
+      elemento.innerHTML = '<div class="linha-geral">Nenhuma observação registrada.</div>';
+      return;
+    }
+
+    elemento.innerHTML = dados.map(function(item) {
+      const corrigida = String(item.status || '').toLowerCase() === 'corrigida' || Boolean(item.corrigida);
+      const linha = Number(item.linha || item.id || item.indice || 0);
+      const texto = String(item.observacao || item.texto || '');
+      const textoCodificado = encodeURIComponent(texto).replace(/'/g, '%27');
+
+      return `
+        <div class="observacao-item ${corrigida ? 'observacao-item-corrigida' : ''}">
+          <div class="observacao-texto" id="observacaoTexto-${linha}">${escapar(texto)}</div>
+          <div class="observacao-info">
+            📅 ${escapar(item.dataHora || item.data || '')}<br>
+            👤 ${escapar(item.usuario || '')}
+            ${corrigida ? '<br>✅ Corrigida' : ''}
+          </div>
+          <div class="observacao-acoes">
+            <button class="btn-acao btn-editar-observacao" onclick="iniciarEdicaoObservacao(${linha}, '${textoCodificado}')">✏️ Editar observação</button>
+            ${!corrigida ? `
+              <button class="btn-acao btn-corrigir" onclick="corrigirObservacao('${escapar(torre)}', '${pavimento}', '${escapar(nomeServico)}', ${linha}, '${textoCodificado}')">✅ Corrigir</button>
+            ` : ''}
+            <button class="btn-acao btn-excluir" onclick="excluirObservacaoTela('${escapar(torre)}', '${pavimento}', '${escapar(nomeServico)}', ${linha}, '${textoCodificado}')">🗑️ Excluir</button>
+          </div>
+          <div id="editorObservacao-${linha}" class="oculto"></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+
+  function iniciarEdicaoObservacao(linha, textoCodificado) {
+    const textoOriginal = decodeURIComponent(textoCodificado || '');
+    const texto = document.getElementById('observacaoTexto-' + linha);
+    const editor = document.getElementById('editorObservacao-' + linha);
+    if (!texto || !editor) return;
+
+    editor.classList.remove('oculto');
+    editor.innerHTML = `
+      <textarea class="editor-observacao" id="campoEdicaoObservacao-${linha}"></textarea>
+      <div class="observacao-acoes">
+        <button class="btn-acao btn-corrigir" onclick="salvarEdicaoObservacao(${linha}, '${encodeURIComponent(textoOriginal).replace(/'/g, '%27')}')">💾 Salvar edição</button>
+        <button class="btn-acao btn-excluir" onclick="cancelarEdicaoObservacao(${linha})">Cancelar</button>
+      </div>
+    `;
+    document.getElementById('campoEdicaoObservacao-' + linha).value = textoOriginal;
+    texto.classList.add('oculto');
+  }
+
+
+  function cancelarEdicaoObservacao(linha) {
+    const texto = document.getElementById('observacaoTexto-' + linha);
+    const editor = document.getElementById('editorObservacao-' + linha);
+    if (texto) texto.classList.remove('oculto');
+    if (editor) {
+      editor.classList.add('oculto');
+      editor.innerHTML = '';
+    }
+  }
+
+
+  function salvarEdicaoObservacao(linha, textoOriginalCodificado) {
+    const campo = document.getElementById('campoEdicaoObservacao-' + linha);
+    if (!campo) return;
+    const novoTexto = campo.value.trim();
+    const textoOriginal = decodeURIComponent(textoOriginalCodificado || '');
+    if (!novoTexto) {
+      mostrarMensagem('🔴 A observação não pode ficar vazia.', 'erro');
+      return;
+    }
+    if (novoTexto === textoOriginal) {
+      cancelarEdicaoObservacao(linha);
+      return;
+    }
+
+    const contexto = window.__contextoObservacoes;
+    if (!contexto) {
+      mostrarMensagem('Não foi possível identificar o serviço desta observação.', 'erro');
+      return;
+    }
+
+    fvsOfflineRun()
+      .withSuccessHandler(function() {
+        mostrarMensagem('✏️ Observação atualizada!');
+        carregarObservacoes(contexto.torre, contexto.pavimento, contexto.servico);
+      })
+      .withFailureHandler(mostrarErro)
+      .editarObservacao(linha, contexto.torre, contexto.pavimento, contexto.servico, textoOriginal, novoTexto);
+  }
+
+
+  function excluirObservacaoTela(torre, pavimento, nomeServico, linha, textoCodificado) {
+    if (!confirm('Deseja excluir esta observação?')) return;
+    const textoOriginal = decodeURIComponent(textoCodificado || '');
+
+    fvsOfflineRun()
+      .withSuccessHandler(function() {
+        mostrarMensagem('🗑️ Observação excluída com sucesso!');
+        carregarObservacoes(torre, pavimento, nomeServico);
+      })
+      .withFailureHandler(mostrarErro)
+      .excluirObservacao(linha, torre, pavimento, nomeServico, textoOriginal);
+  }
+
+
+  function corrigirObservacao(torre, pavimento, nomeServico, linha, textoCodificado) {
+    const textoOriginal = decodeURIComponent(textoCodificado || '');
+    fvsOfflineRun()
+      .withSuccessHandler(function() {
+        mostrarMensagem('✅ Observação marcada como corrigida!');
+        carregarObservacoes(torre, pavimento, nomeServico);
+      })
+      .withFailureHandler(mostrarErro)
+      .marcarObservacaoCorrigida(linha, torre, pavimento, nomeServico, textoOriginal);
+  }
+
+
+  function salvarObservacao(
+    torre,
+    pavimento,
+    nomeServico
+  ) {
+
+    const campo =
+      document.getElementById(
+        'novaObservacao'
+      );
+
+    if (!campo) {
+
+      return;
+
+    }
+
+    const texto =
+      campo.value.trim();
+
+    if (!texto) {
+
+      mostrarMensagem(
+        '🔴 Digite uma observação.',
+        'erro'
+      );
+
+      return;
+
+    }
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function() {
+
+          campo.value = '';
+
+          mostrarMensagem(
+            '📝 Observação salva com sucesso!'
+          );
+
+          carregarObservacoes(
+            torre,
+            pavimento,
+            nomeServico
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .registrarObservacao(
+        torre,
+        pavimento,
+        nomeServico,
+        texto
+      );
+
+  }
+
+
+  /* =====================================================
+     LINHA CLICÁVEL DE PAVIMENTO
+     ===================================================== */
+
+  function montarPavimentoClicavel(
+    pavimento,
+    tipo,
+    nomeItem,
+    torre,
+    temObservacao
+  ) {
+
+    let classe =
+      'pavimento-andamento';
+
+    let icone =
+      '🟡';
+
+    if (
+      tipo === 'concluido'
+    ) {
+
+      classe =
+        'pavimento-concluido';
+
+      icone =
+        '🟢';
+
+    }
+
+    if (
+      tipo === 'pendencia'
+    ) {
+
+      classe =
+        'pavimento-pendencia';
+
+      icone =
+        '🔴';
+
+    }
+
+    const nomeSeguro =
+      escapar(
+        nomeItem
+      );
+
+    const torreSegura =
+      escapar(
+        torre
+      );
+
+    return `
+
+      <div
+        class="pavimento-clicavel ${classe}"
+        onclick="abrirPavimentoAcompanhamento(
+          '${nomeSeguro}',
+          '${torreSegura}',
+          '${pavimento}'
+        )">
+
+        <span style="display:inline-flex; flex-direction:column; align-items:flex-start;">
+
+          <span>
+            ${icone}
+            ${pavimento}º pavimento
+          </span>
+
+          ${tipo === 'concluido' || tipo === 'andamento' ? `
+            <small style="margin-left:24px; color:${temObservacao ? '#c62828' : '#2e7d32'}; font-weight:600;">
+              ${temObservacao ? '* Existe uma observação' : '* Sem observações'}
+            </small>
+          ` : ''}
+
+        </span>
+
+        <span class="seta">
+
+          →
+
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+
+  function abrirPavimentoAcompanhamento(
+    nomeItem,
+    torre,
+    pavimento
+  ) {
+
+    const nomeTeste =
+      descobrirTesteLogico(
+        nomeItem
+      );
+
+    const testeSelecionado = document.getElementById('testeAcompanhamento') ? document.getElementById('testeAcompanhamento').value : '';
+    if (normalizarJS(nomeItem) === normalizarJS(testeSelecionado)) {
+      abrirTesteAcompanhamento(nomeItem, torre, pavimento);
+      return;
+    }
+
+    if (
+      nomeTeste !== nomeItem
+    ) {
+
+      abrirTesteAcompanhamento(
+        nomeTeste,
+        torre,
+        pavimento
+      );
+
+      return;
+    }
+
+    abrirServicoAcompanhamento(
+      nomeItem,
+      torre,
+      pavimento
+    );
+
+  }
+
+
+  /* =====================================================
+     ABERTURA / FECHAMENTO DE FVS POR CICLO
+     ===================================================== */
+
+  function carregarFvsCiclo() {
+
+    const lista =
+      document.getElementById(
+        'listaFvsCiclo'
+      );
+
+    lista.innerHTML =
+      '<div class="carregando">Verificando pendências...</div>';
+
+    document
+      .getElementById(
+        'contadorFvsCiclo'
+      )
+      .textContent =
+      '';
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(dados) {
+
+          mostrarFvsCiclo(
+            dados || []
+          );
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .listarPendenciasFvsCiclo();
+
+  }
+
+
+  function mostrarFvsCiclo(
+    dados
+  ) {
+
+    fvsPendenciasAtuais = Array.isArray(dados) ? dados.slice() : [];
+
+    const contador =
+      document.getElementById(
+        'contadorFvsCiclo'
+      );
+
+    const lista =
+      document.getElementById(
+        'listaFvsCiclo'
+      );
+
+    contador.textContent =
+      `${dados.length} pendência(s)`;
+
+    if (
+      dados.length === 0
+    ) {
+
+      lista.innerHTML = `
+
+        <div class="card">
+
+          ✅ Nenhuma abertura ou fechamento
+          de FVS pendente no momento.
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+    let html = '';
+
+    dados.forEach(
+      function(item) {
+
+        const ehAbertura =
+          item.tipo === 'abertura';
+
+        const classe =
+          ehAbertura
+            ? 'fvs-pendencia-abertura'
+            : 'fvs-pendencia-fechamento';
+
+        const classeTipo =
+          ehAbertura
+            ? 'fvs-tipo-abertura'
+            : 'fvs-tipo-fechamento';
+
+        const icone =
+          ehAbertura
+            ? '🟠'
+            : '🟣';
+
+        html += `
+
+          <div
+            class="fvs-pendencia ${classe}">
+
+            <div class="fvs-ciclo">
+
+              ${escapar(
+                item.ciclo
+              )}
+
+            </div>
+
+            <div class="fvs-local">
+
+              🏢 <span class="torre-badge ${normalizarJS(item.torre).includes('torre a') ? 'torre-a' : normalizarJS(item.torre).includes('torre b') ? 'torre-b' : normalizarJS(item.torre).includes('torre c') ? 'torre-c' : 'torre-d'}">
+                ${escapar(item.torre)}
+              </span>
+
+              <br>
+
+              📍 <strong>
+                ${item.pavimento}º pavimento
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span
+                class="fvs-tipo ${classeTipo}">
+
+                ${icone}
+                ${escapar(
+                  item.acao
+                )}
+
+              </span>
+
+              ${item.tipo === 'abertura' && item.dataInicio ? `
+                <div class="fvs-data" style="margin-top:6px; font-size:13px; color:#555;">
+                  📅 Data de início do primeiro serviço: <strong>${escapar(item.dataInicio)}</strong>
+                </div>
+              ` : ''}
+
+              ${item.tipo === 'fechamento' && item.dataConclusao ? `
+                <div class="fvs-data" style="margin-top:6px; font-size:13px; color:#555;">
+                  📅 Data de conclusão do último serviço: <strong>${escapar(item.dataConclusao)}</strong>
+                </div>
+              ` : ''}
+
+            </div>
+
+            <button
+              class="btn-fvs-ok"
+              onclick="confirmarFvsCicloTela(
+                '${escapar(item.ciclo)}',
+                '${escapar(item.torre)}',
+                '${item.pavimento}',
+                '${item.tipo}'
+              )">
+
+              ✅ OK — CONFIRMAR
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+    lista.innerHTML =
+      html;
+  }
+
+
+  function confirmarFvsCicloTela(
+    ciclo,
+    torre,
+    pavimento,
+    tipo
+  ) {
+
+    const texto =
+      tipo === 'abertura'
+        ? 'confirmar a ABERTURA da FVS deste ciclo?'
+        : 'confirmar o FECHAMENTO da FVS deste ciclo?';
+
+    if (
+      !confirm(
+        `Deseja ${texto}`
+      )
+    ) {
+
+      return;
+    }
+
+    fvsOfflineRun()
+
+      .withSuccessHandler(
+        function(resultado) {
+
+          mostrarMensagem(
+            resultado.acao === 'FVS aberta'
+              ? '🟠 FVS aberta com sucesso!'
+              : '🟣 FVS fechada com sucesso!'
+          );
+
+          carregarFvsCiclo();
+
+        }
+      )
+
+      .withFailureHandler(
+        mostrarErro
+      )
+
+      .confirmarFvsCiclo(
+        ciclo,
+        torre,
+        pavimento,
+        tipo
+      );
+  }
+
+
+  function confirmarTodosFvsCicloTela() {
+    const pendencias = Array.isArray(fvsPendenciasAtuais) ? fvsPendenciasAtuais.slice() : [];
+    if (pendencias.length === 0) {
+      mostrarMensagem('Não há pendências para confirmar.');
+      return;
+    }
+    if (!confirm('Deseja confirmar todas as ' + pendencias.length + ' pendência(s) de abertura/fechamento de FVS exibidas?')) return;
+
+    const lista = document.getElementById('listaFvsCiclo');
+    if (lista) lista.innerHTML = '<div class="carregando">Confirmando pendências em lote...</div>';
+
+    fvsOfflineRun()
+      .withSuccessHandler(function(resultado) {
+        const total = resultado && resultado.totalConfirmadas ? resultado.totalConfirmadas : 0;
+        const falhas = resultado && resultado.totalFalhas ? resultado.totalFalhas : 0;
+        if (falhas === 0) {
+          mostrarMensagem('✅ ' + total + ' pendência(s) confirmada(s)!');
+        } else {
+          mostrarMensagem('⚠️ ' + total + ' confirmada(s); ' + falhas + ' não puderam ser confirmadas. Atualizando lista.');
+          console.warn('Falhas ao confirmar FVS em lote:', resultado.falhas || []);
+        }
+        carregarFvsCiclo();
+      })
+      .withFailureHandler(function(erro) {
+        mostrarErro(erro);
+        carregarFvsCiclo();
+      })
+      .confirmarTodasFvsCiclo(pendencias);
+  }
+
+
+  /* =====================================================
+     HISTÓRICO
+     ===================================================== */
+
+  let historicoOffset = 0;
+  let historicoTotal = 0;
+  let historicoConsultaId = 0;
+  let historicoMaisCarregandoId = 0;
+  const HISTORICO_PAGINA = 50;
+
+  function carregarHistorico(carregarMais = false) {
+
+    // Evita solicitar duas vezes a mesma próxima página.
+    if (carregarMais && historicoMaisCarregandoId === historicoConsultaId) {
+      return;
+    }
+
+    // Uma nova pesquisa/filtro invalida respostas pendentes da consulta anterior.
+    if (!carregarMais) {
+      historicoConsultaId++;
+      historicoOffset = 0;
+      historicoTotal = 0;
+      historicoMaisCarregandoId = 0;
+
+      document.getElementById('listaHistorico').innerHTML =
+        '<div class="card">Carregando histórico...</div>';
+      document.getElementById('maisHistorico').innerHTML = '';
+    }
+
+    const consultaId = historicoConsultaId;
+    const offsetSolicitado = carregarMais ? historicoOffset : 0;
+    const filtros = {
+      busca: document.getElementById('buscaHistorico').value,
+      torre: document.getElementById('filtroTorreHistorico').value,
+      pavimento: document.getElementById('filtroPavimentoHistorico').value,
+      acao: document.getElementById('filtroAcaoHistorico').value,
+      offset: offsetSolicitado,
+      limit: HISTORICO_PAGINA
+    };
+
+    if (carregarMais) {
+      historicoMaisCarregandoId = consultaId;
+      const botao = document.getElementById('btnMaisHistorico');
+      if (botao) {
+        botao.disabled = true;
+        botao.textContent = 'Carregando...';
+      }
+    }
+
+    fvsOfflineRun()
+      .withSuccessHandler(function(resposta) {
+        // Ignora retorno de buscas antigas que terminaram fora de ordem.
+        if (consultaId !== historicoConsultaId) {
+          if (historicoMaisCarregandoId === consultaId) {
+            historicoMaisCarregandoId = 0;
+          }
+          return;
+        }
+
+        if (historicoMaisCarregandoId === consultaId) {
+          historicoMaisCarregandoId = 0;
+        }
+
+        // O Code.gs paginado retorna {items,total,hasMore}; o array mantém compatibilidade.
+        const pagina = Array.isArray(resposta)
+          ? { items: resposta, total: resposta.length, hasMore: false }
+          : (resposta || { items: [], total: 0, hasMore: false });
+        const itens = Array.isArray(pagina.items) ? pagina.items : [];
+        const total = Number(pagina.total) || 0;
+        const temMais = Boolean(pagina.hasMore);
+
+        mostrarHistorico(itens, carregarMais, total, temMais);
+        historicoOffset = offsetSolicitado + itens.length;
+        historicoTotal = total;
+      })
+      .withFailureHandler(function(erro) {
+        if (consultaId !== historicoConsultaId) {
+          if (historicoMaisCarregandoId === consultaId) {
+            historicoMaisCarregandoId = 0;
+          }
+          return;
+        }
+
+        if (historicoMaisCarregandoId === consultaId) {
+          historicoMaisCarregandoId = 0;
+        }
+
+        mostrarErro(erro);
+        if (carregarMais) {
+          document.getElementById('maisHistorico').innerHTML =
+            '<button id="btnMaisHistorico" class="btn-principal" onclick="carregarHistorico(true)">Tentar carregar mais 50</button>';
+        } else {
+          document.getElementById('listaHistorico').innerHTML =
+            '<div class="card">Não foi possível carregar o histórico. Tente novamente.</div>';
+          document.getElementById('maisHistorico').innerHTML =
+            '<button class="btn-principal" onclick="carregarHistorico()">Tentar novamente</button>';
+        }
+      })
+      .listarHistorico(filtros);
+  }
+
+
+  function mostrarHistorico(dados, anexar = false, total = 0, temMais = false) {
+
+    const contador = document.getElementById('contadorHistorico');
+    const lista = document.getElementById('listaHistorico');
+    const mais = document.getElementById('maisHistorico');
+
+    if (!anexar && dados.length === 0) {
+      contador.textContent = '0 registro(s)';
+      lista.innerHTML = '<div class="card">Nenhum registro encontrado.</div>';
+      mais.innerHTML = '';
+      return;
+    }
+
+    const htmlRegistros = dados.map(function(item) {
+      let classeAcao = 'historico-iniciado';
+      let iconeAcao = '🟢';
+
+      if (item.acao === 'Concluído') {
+        classeAcao = 'historico-concluido';
+        iconeAcao = '🔵';
+      }
+
+      if (item.acao === 'Serviço excluído' || item.acao === 'Observação excluída') {
+        classeAcao = 'historico-excluido';
+        iconeAcao = '🗑️';
+      }
+
+      if (item.acao === 'FVS aberta' || item.acao === 'FVS fechada') {
+        classeAcao = 'historico-fvs';
+        iconeAcao = item.acao === 'FVS aberta' ? '🟠' : '🟣';
+      }
+
+      const acaoFvs = item.acao === 'FVS aberta' || item.acao === 'FVS fechada';
+      const classeItem = acaoFvs
+        ? 'historico-item historico-item-sem-clique'
+        : 'historico-item';
+      const clique = acaoFvs
+        ? ''
+        : `onclick="abrirItemHistorico('${escapar(item.item)}','${escapar(item.torre)}','${item.pavimento}')"`;
+
+      return `
+        <div class="${classeItem}" ${clique}>
+          <div class="historico-item-nome">${escapar(item.item)}</div>
+          <div class="historico-local">🏢 ${escapar(item.torre)} — ${item.pavimento}º Pavimento</div>
+          <div><span class="historico-acao ${classeAcao}">${iconeAcao} ${escapar(item.acao)}</span></div>
+          <div class="historico-info">
+            📅 ${escapar(item.dataHora)}<br>
+            👤 ${escapar(item.usuario)}
+            ${acaoFvs ? '' : '<br>👆 Toque para abrir'}
+          </div>
+        </div>`;
+    }).join('');
+
+    if (anexar) {
+      lista.insertAdjacentHTML('beforeend', htmlRegistros);
+    } else {
+      lista.innerHTML = htmlRegistros;
+    }
+
+    const exibidos = lista.querySelectorAll('.historico-item').length;
+    contador.textContent = `Exibindo ${exibidos} de ${total} registro(s)`;
+
+    if (temMais) {
+      mais.innerHTML =
+        '<button id="btnMaisHistorico" class="btn-principal" onclick="carregarHistorico(true)">Carregar mais 50</button>';
+    } else if (exibidos > 0) {
+      mais.innerHTML = '<div class="historico-info">Todos os registros encontrados foram carregados.</div>';
+    } else {
+      mais.innerHTML = '';
+    }
+  }
+
+
+  function abrirItemHistorico(
+    item,
+    torre,
+    pavimento
+  ) {
+
+    const testeLogico =
+      descobrirTesteLogico(
+        item
+      );
+
+    if (
+      testeLogico !== item
+    ) {
+
+      document
+        .getElementById(
+          'torreTestes'
+        )
+        .value =
+        torre;
+
+      document
+        .getElementById(
+          'pavimentoTestes'
+        )
+        .value =
+        pavimento;
+
+      abrirTesteComContexto(
+        testeLogico,
+        torre,
+        pavimento,
+        'telaHistorico'
+      );
+
+      return;
+    }
+
+    document
+      .getElementById(
+        'torreServicos'
+      )
+      .value =
+      torre;
+
+    document
+      .getElementById(
+        'pavimentoServicos'
+      )
+      .value =
+      pavimento;
+
+    abrirServicoComContexto(
+      item,
+      torre,
+      pavimento,
+      'telaHistorico'
+    );
+
+  }
+
+
+  /* =====================================================
+     STATUS
+     ===================================================== */
+
+  function montarStatus(
+    status
+  ) {
+
+    let classe =
+      'status-nao';
+
+    if (
+      status ===
+      'Em andamento'
+    ) {
+
+      classe =
+        'status-andamento';
+
+    }
+
+    if (
+      status ===
+      'Concluído'
+    ) {
+
+      classe =
+        'status-concluido';
+
+    }
+
+    return `
+
+      <span
+        class="status ${classe}">
+
+        ${status}
+
+      </span>
+
+    `;
+  }
+
+
+  /* =====================================================
+     MENSAGENS
+     ===================================================== */
+
+  function mostrarMensagem(
+    texto,
+    tipo = 'sucesso',
+    exigirOk = false
+  ) {
+
+    if (window.__fvsRespostaOfflinePendente) {
+      texto = '📥 Salvo neste celular; aguardando sincronização. ' + String(texto || '');
+      tipo = 'aviso';
+    }
+
+    const elemento = document.getElementById('mensagemApp');
+    clearTimeout(window.timerMensagemApp);
+    elemento.innerHTML = '';
+    elemento.appendChild(document.createTextNode(String(texto || '')));
+    elemento.className = tipo;
+
+    if (exigirOk) {
+      const botaoOk = document.createElement('button');
+      botaoOk.type = 'button';
+      botaoOk.className = 'mensagem-ok';
+      botaoOk.textContent = 'OK';
+      botaoOk.addEventListener('click', fecharMensagemApp);
+      elemento.appendChild(botaoOk);
+    }
+
+    elemento.style.display = 'block';
+
+    if (!exigirOk) {
+      window.timerMensagemApp = setTimeout(function() {
+        fecharMensagemApp();
+      }, 5000);
+    }
+  }
+
+  function fecharMensagemApp() {
+    clearTimeout(window.timerMensagemApp);
+    window.timerMensagemApp = null;
+    const elemento = document.getElementById('mensagemApp');
+    if (elemento) {
+      elemento.style.display = 'none';
+      elemento.innerHTML = '';
+    }
+  }
+
+
+  /* =====================================================
+     UTILITÁRIOS
+     ===================================================== */
+
+  function escapar(
+    texto
+  ) {
+
+    return String(
+      texto || ''
+    )
+
+      .replace(
+        /&/g,
+        '&amp;'
+      )
+
+      .replace(
+        /</g,
+        '&lt;'
+      )
+
+      .replace(
+        />/g,
+        '&gt;'
+      )
+
+      .replace(
+        /"/g,
+        '&quot;'
+      )
+
+      .replace(
+        /'/g,
+        '&#039;'
+      );
+
+  }
+
+
+  function normalizarJS(
+    texto
+  ) {
+
+    return String(
+      texto || ''
+    )
+
+      .trim()
+
+      .toLowerCase()
+
+      .normalize('NFD')
+
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      );
+
+  }
+
+
+  function formatarListaPavimentos(
+    lista
+  ) {
+
+    if (
+      !Array.isArray(lista)
+    ) {
+
+      lista =
+        lista
+          ? [lista]
+          : [];
+
+    }
+
+    if (
+      lista.length === 0
+    ) {
+
+      return 'Nenhum';
+
+    }
+
+    if (
+      lista.length === 1
+    ) {
+
+      return (
+        lista[0] +
+        'º pavimento'
+      );
+
+    }
+
+    if (
+      lista.length === 2
+    ) {
+
+      return (
+        lista[0] +
+        'º e ' +
+        lista[1] +
+        'º pavimentos'
+      );
+
+    }
+
+    return (
+      lista
+        .slice(0, -1)
+        .map(
+          function(pavimento) {
+
+            return (
+              pavimento +
+              'º'
+            );
+
+          }
+        )
+        .join(', ') +
+
+      ' e ' +
+
+      lista[
+        lista.length - 1
+      ] +
+
+      'º pavimentos'
+    );
+
+  }
+
+
+  function mostrarErro(
+    erro
+  ) {
+
+    const textoErro = String(erro && erro.message ? erro.message : erro);
+    const bloqueioObservacao = /observa[cç][aã]o.*pendente|pendente.*observa[cç][aã]o/i.test(textoErro);
+    mostrarMensagem(
+      '🔴 ' + textoErro,
+      'erro',
+      bloqueioObservacao
+    );
+
+  }
+
+
+  /* =====================================================
+     INICIALIZAÇÃO
+     ===================================================== */
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    function() {
+
+      document
+        .getElementById(
+          'menuPrincipal'
+        )
+        .classList.remove(
+          'oculto'
+        );
+
+      fvsOfflineInit();
+
+    }
+  );
+
+
+
+
+  function dataLocalISO() {
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const dia = String(agora.getDate()).padStart(2, '0');
+    return ano + '-' + mes + '-' + dia;
+  }
+
+  function abrirDiarioObras() {
+    esconderTodasTelas();
+    telaAnterior = 'telaDiarioObras';
+    document.getElementById('telaDiarioObras').classList.remove('oculto');
+    const filtroData = document.getElementById('dataDiario');
+    if (filtroData && !filtroData.value) filtroData.value = dataLocalISO();
+    carregarFotosDiario();
+  }
+
+  function arquivosParaBase64(inputId, callback) {
+    const input = document.getElementById(inputId);
+    const arquivos = input && input.files ? Array.from(input.files) : [];
+    if (!arquivos.length) { mostrarMensagem('Selecione pelo menos uma foto.', 'erro'); return; }
+    if (arquivos.some(f => !f.type.startsWith('image/'))) { mostrarMensagem('Selecione somente arquivos de imagem.', 'erro'); return; }
+    if (arquivos.some(f => f.size > 8 * 1024 * 1024)) { mostrarMensagem('Cada foto deve ter no máximo 8 MB. Se necessário, reduza a imagem e tente novamente.', 'erro'); return; }
+    Promise.all(arquivos.map(file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({nome:file.name, mimeType:file.type || 'image/jpeg', base64:String(reader.result).split(',')[1]});
+      reader.onerror = () => reject(new Error('Não foi possível ler uma das fotos.'));
+      reader.readAsDataURL(file);
+    }))).then(callback).catch(err => mostrarMensagem(err.message || 'Erro ao ler as fotos.', 'erro'));
+  }
+
+  function enviarFotosServico(torre, pavimento, servico) {
+    arquivosParaBase64('fotosServicoUpload', fotos => {
+      mostrarMensagem('Enviando fotos do serviço...', 'sucesso');
+      fvsOfflineRun().withSuccessHandler(r => {
+        mostrarMensagem('Fotos do serviço salvas com sucesso!');
+        document.getElementById('fotosServicoUpload').value = '';
+        carregarFotosServico(torre, pavimento, servico);
+      }).withFailureHandler(mostrarErro).salvarFotosFvs({tipo:'servico', torre, pavimento:Number(pavimento), servico, descricao:'', fotos});
+    });
+  }
+
+  function carregarFotosServico(torre, pavimento, servico) {
+    const el = document.getElementById('listaFotosServico'); if (!el) return;
+    el.innerHTML = '<div class="carregando">Carregando fotos...</div>';
+    fvsOfflineRun().withSuccessHandler(lista => renderizarGaleriaFotos(el, lista)).withFailureHandler(err => { el.innerHTML = '<p>Não foi possível carregar as fotos. ' + escapar(err.message || '') + '</p>'; }).listarFotosFvs({tipo:'servico', torre, pavimento:Number(pavimento), servico});
+  }
+
+  function enviarFotosDiario() {
+    const torre = document.getElementById('diarioTorre').value;
+    const pavimento = document.getElementById('diarioPavimento').value;
+    const descricao = document.getElementById('diarioDescricao').value.trim();
+    if (!torre) { mostrarMensagem('Selecione a torre para o registro.', 'erro'); return; }
+    arquivosParaBase64('diarioFotos', fotos => {
+      mostrarMensagem('Enviando fotos para o Diário de Obras...', 'sucesso');
+      fvsOfflineRun().withSuccessHandler(() => {
+        mostrarMensagem('Registro do Diário de Obras salvo!');
+        document.getElementById('diarioFotos').value = '';
+        document.getElementById('diarioDescricao').value = '';
+        carregarFotosDiario();
+      }).withFailureHandler(mostrarErro).salvarFotosFvs({tipo:'diario', torre, pavimento:pavimento ? Number(pavimento) : '', servico:'', descricao, fotos});
+    });
+  }
+
+  function carregarFotosDiario() {
+    const el = document.getElementById('listaFotosDiario'); if (!el) return;
+    const campoData = document.getElementById('dataDiario');
+    if (campoData && !campoData.value) campoData.value = dataLocalISO();
+    const data = campoData ? campoData.value : dataLocalISO();
+    el.innerHTML = '<div class="carregando">Carregando fotos de ' + escapar(data) + '...</div>';
+    fvsOfflineRun().withSuccessHandler(lista => renderizarGaleriaFotos(el, lista, true)).withFailureHandler(err => { el.innerHTML = '<p>Não foi possível carregar o diário. ' + escapar(err.message || '') + '</p>'; }).listarFotosFvs({tipo:'diario', data});
+  }
+
+  function renderizarGaleriaFotos(el, lista, diario) {
+    if (!lista || !lista.length) { el.innerHTML = '<div class="sem-resultados">Nenhuma foto registrada ainda.</div>'; return; }
+    el.className = 'galeria-fotos';
+    el.innerHTML = lista.map(item => {
+      const local = [item.torre, item.pavimento ? item.pavimento + 'º pavimento' : '', item.servico || ''].filter(Boolean).join(' • ');
+      const thumb = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(item.fileId) + '&sz=w500';
+      return '<div class="foto-item"><a href="' + escapar(item.url) + '" target="_blank" rel="noopener"><img src="' + thumb + '" alt="' + escapar(item.nome) + '" loading="lazy"></a><div><strong>' + escapar(item.descricao || item.nome) + '</strong></div><div class="foto-meta">' + escapar(local) + '</div><div class="foto-meta">' + escapar(item.dataHora || '') + '</div><a href="' + escapar(item.url) + '" target="_blank" rel="noopener">Abrir foto no Drive</a></div>';
+    }).join('');
+  }
+
+</script>
+
+</body>
+
+</html>
